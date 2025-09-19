@@ -15,7 +15,7 @@ export default function Navbar() {
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-28" style={{ height: "var(--nav-h)" }}>
         <nav className="flex h-full items-center justify-between rounded-full bg-gradient-to-r from-[#FFFAF6] to-[#FFE7CC] px-4 sm:px-6 ring-1 ring-black/5">
           <div className="flex items-center gap-3">
-            <img src="/images/logo.png" alt="LearnWAI" className="h-10 w-10 object-contain" draggable={false}/>
+            <img src="/images/Logo.png" alt="LearnWAI" className="h-10 w-10 object-contain" draggable={false}/>
             <span className="font-krona text-[18px] sm:text-[20px] text-black"> LearnWAI </span>
           </div>
           <div className="hidden md:flex items-center gap-3">
