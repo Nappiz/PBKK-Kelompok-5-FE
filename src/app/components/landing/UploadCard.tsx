@@ -9,7 +9,7 @@ export default function UploadCard() {
       aria-label="Drop your PDF here"
     >
       <img
-        src="/images/icon/pdf.png"
+        src="/images/pdf.png"
         alt="PDF"
         className="mb-4 h-10 w-10 object-contain"
         draggable={false}
@@ -17,7 +17,7 @@ export default function UploadCard() {
 
       <div className="flex items-center gap-2 text-neutral-500">
         <img
-          src="/images/icon/Drop.png"
+          src="/images/Drop.png"
           alt=""
           className="h-4 w-4 object-contain opacity-80"
           draggable={false}
