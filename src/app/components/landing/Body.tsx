@@ -43,9 +43,9 @@ export default function Body() {
 
         <HowSteps
           steps={[
-            { icon: "/images/icon/Upload.png", title: "1. Upload", desc: "Drag & Drop" },
-            { icon: "/images/icon/Ai.png", title: "2. AI Summarize", desc: "Get clean notes with highlights" },
-            { icon: "/images/icon/Quiz.png", title: "3. Practice Quiz", desc: "Review with flashcards and quizzes" },
+            { icon: "/images/Upload.png", title: "1. Upload", desc: "Drag & Drop" },
+            { icon: "/images/Ai.png", title: "2. AI Summarize", desc: "Get clean notes with highlights" },
+            { icon: "/images/Quiz.png", title: "3. Practice Quiz", desc: "Review with flashcards and quizzes" },
           ]}
         />
       </div>
