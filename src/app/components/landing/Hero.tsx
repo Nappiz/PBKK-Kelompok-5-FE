@@ -17,7 +17,7 @@ export default function Hero() {
             Your AI Study Buddy for Everyday Learning.
           </p>
 
-          <Button className="font-inter font-medium text-[20px] text-black bg-gradient-to-r from-[#FFB468] to-[#FFD270] px-7 py-3">
+          <Button className="cursor-pointer font-inter font-medium text-[20px] text-black bg-gradient-to-r from-[#FFB468] to-[#FFD270] px-7 py-3">
             Get Started
           </Button>
         </div>
