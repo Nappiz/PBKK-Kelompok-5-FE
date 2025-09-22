@@ -19,10 +19,10 @@ export default function Navbar() {
             <span className="font-krona text-[18px] sm:text-[20px] text-black"> LearnWAI </span>
           </div>
           <div className="hidden md:flex items-center gap-3">
-            <a href="#register" className="font-krona text-black rounded-full border border-white bg-transparent px-5 py-1.5 text-[15px] hover:bg-white/20">
+            <a href="register" className="font-krona text-black rounded-full border border-white bg-transparent px-5 py-1.5 text-[15px] hover:bg-white/20">
               Register
             </a>
-            <a href="#login" className="font-krona text-black rounded-full border border-white bg-transparent px-5 py-1.5 text-[15px] hover:bg-white/20">
+            <a href="login" className="font-krona text-black rounded-full border border-white bg-transparent px-5 py-1.5 text-[15px] hover:bg-white/20">
               Login
             </a>
           </div>
