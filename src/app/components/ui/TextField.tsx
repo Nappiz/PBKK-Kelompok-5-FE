@@ -21,7 +21,7 @@ const TextField = forwardRef<HTMLInputElement, Props>(
             ref={ref}
             {...rest}
             className={[
-              "w-full rounded-2xl border bg-white/90 px-4 py-3 outline-none",
+              "w-full rounded-2xl border bg-white/90 px-4 py-3 outline-none text-black",
               iconLeft ? "pl-10" : "",
               "border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-200",
               className,

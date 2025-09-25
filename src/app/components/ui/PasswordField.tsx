@@ -25,7 +25,7 @@ const PasswordField = forwardRef<HTMLInputElement, Props>(
             {...rest}
             type={show ? "text" : "password"}
             className={[
-              "w-full rounded-2xl border bg-white/90 px-4 py-3 pl-10 pr-11 outline-none",
+              "w-full rounded-2xl border bg-white/90 px-4 py-3 pl-10 pr-11 outline-none text-black",
               "border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-200",
               className,
             ].join(" ")}
