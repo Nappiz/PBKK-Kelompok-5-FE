@@ -2,7 +2,8 @@
 
 export default function Footer() {
   return (
-    <footer className="bg-[#FF9540] text-black">
+    <footer className="relative bg-[#FF9540] text-black">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-black/10 to-transparent" />
       <div className="mx-auto flex max-w-6xl flex-col items-stretch justify-between gap-10 px-6 py-10 md:flex-row md:items-start">
         <div className="flex flex-col">
           <div className="flex items-center gap-3">
@@ -32,15 +33,15 @@ export default function Footer() {
           <div>
             <div className="font-inter font-semibold">Social Media</div>
             <ul className="mt-2 space-y-2 font-inter text-sm">
-              <li className="flex items-center gap-2 md:justify-start">
+              <li className="flex items-center gap-2 md:justify-start transition hover:translate-x-0.5">
                 <img src="/images/IG.png" alt="" className="h-4 w-4 select-none" />
                 <span>Instagram</span>
               </li>
-              <li className="flex items-center gap-2 md:justify-start">
+              <li className="flex items-center gap-2 md:justify-start transition hover:translate-x-0.5">
                 <img src="/images/YT.png" alt="" className="h-4 w-4 select-none" />
                 <span>Youtube</span>
               </li>
-              <li className="flex items-center gap-2 md:justify-start">
+              <li className="flex items-center gap-2 md:justify-start transition hover:translate-x-0.5">
                 <img src="/images/Linkedin.png" alt="" className="h-4 w-4 select-none" />
                 <span>LinkedIn</span>
               </li>

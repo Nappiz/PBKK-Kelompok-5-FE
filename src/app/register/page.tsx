@@ -5,7 +5,7 @@ import AuthLayout from "../components/auth/AuthLayout";
 import TextField from "../components/ui/TextField";
 import PasswordField from "../components/ui/PasswordField";
 import { apiRegister } from "../../lib/api";
-import { setUserId } from "../../lib/user";
+import { setSession } from "../../lib/session";
 
 export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
@@ -20,24 +20,16 @@ export default function RegisterPage() {
     const confirm = String(f.get("confirm") || "");
 
     setErr(null);
-    if (!name || !email || !password) {
-      setErr("Please complete all fields.");
-      return;
-    }
-    if (password.length < 8) {
-      setErr("Password must be at least 8 characters.");
-      return;
-    }
-    if (password !== confirm) {
-      setErr("Passwords do not match.");
-      return;
-    }
+    if (!name || !email || !password) return setErr("Please complete all fields.");
+    if (password.length < 8) return setErr("Password must be at least 8 characters.");
+    if (password !== confirm) return setErr("Passwords do not match.");
 
     try {
       setLoading(true);
       const res = await apiRegister({ name, email, password });
-      if (res?.user?.id) setUserId(res.user.id);
-
+      if (res?.user?.id) {
+        setSession({ id: res.user.id, name: res.user.name, email: res.user.email });
+      }
       window.location.href = "/dashboard";
     } catch (e: any) {
       setErr(e.message || "Registration failed");
@@ -60,7 +52,6 @@ export default function RegisterPage() {
             </svg>
           }
         />
-
         <TextField
           label="Email"
           name="email"
@@ -73,7 +64,6 @@ export default function RegisterPage() {
             </svg>
           }
         />
-
         <PasswordField label="Password" name="password" placeholder="At least 8 characters" />
         <PasswordField label="Confirm password" name="confirm" placeholder="Repeat password" />
 
@@ -83,7 +73,7 @@ export default function RegisterPage() {
           type="submit"
           disabled={loading}
           className={[
-            "w-full rounded-2xl px-6 py-3 font-inter font-medium text-black cursor-pointer",
+            "w-full rounded-2xl px-6 py-3 font-inter font-medium text-black",
             "bg-gradient-to-r from-[#FFB468] to-[#FFD270]",
             loading ? "opacity-70" : "hover:brightness-105 active:translate-y-px",
           ].join(" ")}
