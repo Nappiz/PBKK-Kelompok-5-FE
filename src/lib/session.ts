@@ -1,9 +1,11 @@
-export type Sess = { id: string; name?: string; email?: string };
+export type RawSess = { id: string; name?: string; email?: string };
+
+export type Sess = { id: string; name: string; email: string };
 
 const LS_KEY = "learnwai_session";
 const CK_NAME = "lw_session";
 
-// base64 universal (browser & node)
+// Base64 universal (browser & node)
 function b64e(str: string) {
   if (typeof window === "undefined") {
     // @ts-ignore
@@ -19,10 +21,10 @@ function b64d(b64: string) {
   return decodeURIComponent(escape(atob(b64)));
 }
 
-function encodeSess(s: Sess) {
+function encodeSess(s: RawSess) {
   return b64e(JSON.stringify(s));
 }
-function decodeSess(b64: string): Sess | null {
+function decodeSess(b64: string): RawSess | null {
   try {
     return JSON.parse(b64d(b64));
   } catch {
@@ -30,10 +32,9 @@ function decodeSess(b64: string): Sess | null {
   }
 }
 
-export function setSession(s: Sess) {
+export function setSession(s: RawSess) {
   if (typeof document !== "undefined") {
     const v = encodeSess(s);
-    // 7 hari
     document.cookie = `${CK_NAME}=${v}; Path=/; Max-Age=${60 * 60 * 24 * 7}; SameSite=Lax`;
     try {
       localStorage.setItem(LS_KEY, JSON.stringify(s));
@@ -50,23 +51,37 @@ export function clearSession() {
   }
 }
 
+function normalize(raw: RawSess | null): Sess | null {
+  if (!raw || !raw.id) return null;
+  return {
+    id: raw.id,
+    name: raw.name ?? "",
+    email: raw.email ?? "",
+  };
+}
+
 export function getSession(): Sess | null {
   if (typeof document === "undefined") return null;
 
   const m = document.cookie.match(/(?:^|; )lw_session=([^;]+)/);
   if (m?.[1]) {
     const s = decodeSess(m[1]);
-    if (s) return s;
+    const n = normalize(s);
+    if (n) return n;
   }
 
   try {
     const raw = localStorage.getItem(LS_KEY);
-    return raw ? (JSON.parse(raw) as Sess) : null;
+    const parsed = raw ? (JSON.parse(raw) as RawSess) : null;
+    return normalize(parsed);
   } catch {
     return null;
   }
 }
 
+export function isLoggedIn(): boolean {
+  return !!getSession();
+}
 export function getUserId(): string | undefined {
   return getSession()?.id;
 }
