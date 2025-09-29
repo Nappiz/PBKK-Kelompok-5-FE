@@ -12,7 +12,6 @@ export default function UploadCard() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (f) onFile(f);
-    // reset supaya bisa pilih file yang sama lagi
     e.currentTarget.value = "";
   };
 
@@ -27,11 +26,16 @@ export default function UploadCard() {
       onClick={handleSelect}
       onDragOver={(e) => e.preventDefault()}
       onDrop={handleDrop}
-      className="group flex h-64 w-full max-w-[480px] cursor-pointer flex-col items-center justify-center rounded-2xl border border-orange-200 bg-[#FFF1E6] shadow-sm ring-1 ring-black/5 transition hover:bg-[#FFE8D6]/80"
+      className="group relative flex h-64 w-full max-w-[480px] cursor-pointer flex-col items-center justify-center
+                 rounded-2xl border border-dashed border-orange-200 bg-[#FFF1E6]
+                 shadow-sm ring-1 ring-black/5 transition hover:bg-[#FFE8D6]/80 hover:shadow-md"
       role="button"
       tabIndex={0}
       aria-label="Drop or select your PDF"
     >
+      {/* garis dashed animasi halus */}
+      <span className="pointer-events-none absolute inset-0 rounded-2xl border-2 border-dashed border-orange-300/40 opacity-0 transition group-hover:opacity-100" />
+
       <input ref={inputRef} type="file" accept="application/pdf" hidden onChange={handleChange} />
 
       <img src="/images/pdf.png" alt="" className="mb-4 h-10 w-10 object-contain" />
@@ -59,9 +63,7 @@ export default function UploadCard() {
             {state.docUrl ? (
               <>
                 {" "}
-                – <a href={state.docUrl} target="_blank" className="underline">
-                  view
-                </a>
+                – <a href={state.docUrl} target="_blank" className="underline">view</a>
               </>
             ) : null}
           </div>
