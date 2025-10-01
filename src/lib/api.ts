@@ -1,10 +1,18 @@
-const BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
+// Selalu tanpa trailing slash
+const RAW_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
+export const BASE = RAW_BASE.replace(/\/+$/, "");
+
+// Helper join aman (path tanpa leading slash)
+function u(path: string) {
+  const p = path.replace(/^\/+/, "");
+  return `${BASE}/${p}`;
+}
 
 export async function uploadPdf(file: File, userId?: string) {
   const fd = new FormData();
   fd.append("file", file);
   const q = userId ? `?user_id=${encodeURIComponent(userId)}` : "";
-  const resp = await fetch(`${BASE}/upload${q}`, { method: "POST", body: fd });
+  const resp = await fetch(u(`upload${q}`), { method: "POST", body: fd });
   if (!resp.ok) {
     let msg = "Upload failed";
     try { const j = await resp.json(); msg = j?.detail || msg; } catch {}
@@ -15,7 +23,7 @@ export async function uploadPdf(file: File, userId?: string) {
 
 type RegisterBody = { name: string; email: string; password: string };
 export async function apiRegister(body: RegisterBody) {
-  const r = await fetch(`${BASE}/auth/register`, {
+  const r = await fetch(u("auth/register"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
@@ -30,7 +38,7 @@ export async function apiRegister(body: RegisterBody) {
 
 type LoginBody = { email: string; password: string };
 export async function apiLogin(body: LoginBody) {
-  const r = await fetch(`${BASE}/auth/login`, {
+  const r = await fetch(u("auth/login"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
