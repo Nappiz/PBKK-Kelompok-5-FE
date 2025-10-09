@@ -31,7 +31,7 @@ export default function DashboardPage() {
   useEffect(() => {
     // TODO: ganti dengan fetch dokumen dari BE
     setDocs([
-      { id: "1", title: "Dummy Title", description: "Dummy Description", url: "#" },
+      { id: "1", title: "Dummy Title", description: "Dummy Description", url: "/dashboard/slug" },
     ]);
   }, []);
 
