@@ -1,21 +1,45 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { clearSession } from "../../../lib/session";
+import { clearSession } from "../../../../lib/session";
 
-export default function Sidebar({ userName }: { userName: string }) {
-  const [expanded, setExpanded] = useState<boolean>(true);
+type Props = {
+  /** section aktif untuk highlighting menu */
+  active?: "summarize" | "ai" | "flashcards";
+  /** dipanggil saat user klik item menu kiri */
+  onChange?: (k: "summarize" | "ai" | "flashcards") => void;
+};
+
+export default function CurrentSidebar({ active = "summarize", onChange }: Props) {
+  const [expanded, setExpanded] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
+  // set initial state by breakpoint dan pasang CSS variable `--sbw`
   useEffect(() => {
     const mql = window.matchMedia("(min-width: 768px)");
-    const apply = () => setExpanded(mql.matches);
+    const apply = () => {
+      const exp = mql.matches;           // md ke atas default expanded
+      setExpanded(exp);
+      document.documentElement.style.setProperty("--sbw", exp ? "256px" : "56px");
+    };
     apply();
     mql.addEventListener("change", apply);
     return () => mql.removeEventListener("change", apply);
   }, []);
 
+  // update CSS variable saat toggle expand/collapse di md+
+  useEffect(() => {
+    // pada mobile kita pakai overlay, jadi tidak butuh padding kiri -> 0
+    const isMd = window.matchMedia("(min-width: 768px)").matches;
+    if (isMd) {
+      document.documentElement.style.setProperty("--sbw", expanded ? "256px" : "56px");
+    } else {
+      document.documentElement.style.setProperty("--sbw", "0px");
+    }
+  }, [expanded]);
+
+  // tutup menu user jika klik di luar
   useEffect(() => {
     function onDoc(e: MouseEvent) {
       if (!menuRef.current) return;
@@ -73,26 +97,64 @@ export default function Sidebar({ userName }: { userName: string }) {
           </div>
         </div>
 
+        {/* menu */}
         <nav className="mt-6 space-y-1 px-2">
-          <a href="/dashboard" className="flex items-center gap-3 rounded-lg px-2 py-2 text-sm font-medium text-black hover:bg-white/15">
+          <a
+            href="/dashboard"
+            className="flex items-center gap-3 rounded-lg px-2 py-2 text-sm font-medium text-black hover:bg-white/15"
+            title="Back to Dashboard"
+          >
             <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-black/10">
               <img src="/images/home.png" alt="" className="h-5 w-5" />
             </span>
-            {expanded && <span>Dashboard</span>}
+            {expanded && <span>Back to Dashboard</span>}
           </a>
 
-          <a href="/settings" className="flex items-center gap-3 rounded-lg px-2 py-2 text-sm font-medium text-black/90 hover:bg-white/15">
+          <button
+            onClick={() => onChange?.("summarize")}
+            className={[
+              "cursor-pointer flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left text-sm hover:bg-white/15",
+              active === "summarize" ? "bg-white/20 font-medium text-black" : "text-black/90",
+            ].join(" ")}
+          >
             <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-black/10">
-              <img src="/images/settings.png" alt="" className="h-5 w-5" />
+              <img src="/images/summarize.png" alt="" className="h-5 w-5" />
             </span>
-            {expanded && <span>Settings</span>}
-          </a>
+            {expanded && <span>Summarize</span>}
+          </button>
+
+          <button
+            onClick={() => onChange?.("ai")}
+            className={[
+              "cursor-pointer flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left text-sm hover:bg-white/15",
+              active === "ai" ? "bg-white/20 font-medium text-black" : "text-black/90",
+            ].join(" ")}
+          >
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-black/10">
+              <img src="/images/ai.png" alt="" className="h-5 w-5" />
+            </span>
+            {expanded && <span>AI LLM</span>}
+          </button>
+
+          <button
+            onClick={() => onChange?.("flashcards")}
+            className={[
+              "cursor-pointer flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left text-sm hover:bg-white/15",
+              active === "flashcards" ? "bg-white/20 font-medium text-black" : "text-black/90",
+            ].join(" ")}
+          >
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-black/10">
+              <img src="/images/flash.png" alt="" className="h-5 w-5" />
+            </span>
+            {expanded && <span>Flashcards</span>}
+          </button>
         </nav>
 
+        {/* user panel */}
         <div className="absolute bottom-3 left-0 right-0 px-3" ref={menuRef}>
           <button
             onClick={() => setMenuOpen((v) => !v)}
-            className="flex w-full items-center gap-2 rounded-xl bg.white/15 px-3 py-2 text-left text-xs text-black hover:bg-white/20 cursor-pointer"
+            className="cursor-pointer flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs text-black hover:bg-white/20"
             style={{ backgroundColor: "rgba(255,255,255,.15)" }}
             aria-expanded={menuOpen}
             aria-haspopup="menu"
@@ -103,13 +165,11 @@ export default function Sidebar({ userName }: { userName: string }) {
                 <path d="M4 20c2-4 14-4 16 0" fill="black" fillOpacity="0.3" />
               </svg>
             </span>
-            {expanded ? (
+            {expanded && (
               <div className="min-w-0" suppressHydrationWarning>
-                <div className="truncate font-krona text-[11px]">{userName}</div>
+                <div className="truncate font-krona text-[11px]">Superadmin</div>
                 <div className="text-[10px] opacity-70">Logged in</div>
               </div>
-            ) : (
-              <span className="sr-only">{userName}</span>
             )}
             {expanded && (
               <svg className="ml-auto" width="14" height="14" viewBox="0 0 24 24">
@@ -125,7 +185,7 @@ export default function Sidebar({ userName }: { userName: string }) {
             >
               <button
                 onClick={onLogout}
-                className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left hover:bg-black/5 cursor-pointer"
+                className="cursor-pointer text-black flex w-full items-center gap-2 rounded-md px-3 py-2 text-left hover:bg-black/5"
                 role="menuitem"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24">
