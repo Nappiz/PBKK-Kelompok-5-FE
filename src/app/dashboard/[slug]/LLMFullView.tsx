@@ -1,29 +1,44 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { BASE } from "../../../lib/api";
 
 type Msg = { id: string; role: "user" | "ai"; text: string };
 
 export default function LLMFullView() {
-  const [msgs, setMsgs] = useState<Msg[]>([
-    { id: "m1", role: "user", text: "Explain the main conflict in episode 1." },
-    {
-      id: "m2",
-      role: "ai",
-      text:
-        "Tony struggles with panic attacks from balancing family life and mob duties. He begins therapy with Dr. Melfi to unpack stressors and identity.",
-    },
-  ]);
+  const [msgs, setMsgs] = useState<Msg[]>([]);
   const [draft, setDraft] = useState("");
+  const [busy, setBusy] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
-  function send(e: React.FormEvent) {
+  async function ask(question: string) {
+    setBusy(true);
+    try {
+      const r = await fetch(`${BASE}/api/qa`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question }),
+      });
+      if (!r.ok) throw new Error((await r.text()) || "QA failed");
+      const j = await r.json();
+      return String(j?.answer ?? "");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function send(e: React.FormEvent) {
     e.preventDefault();
-    const t = draft.trim();
-    if (!t) return;
-    setMsgs((m) => [...m, { id: crypto.randomUUID(), role: "user", text: t }, { id: crypto.randomUUID(), role: "ai", text: "Dummy answer… (connect to backend later)." }]);
+    const q = draft.trim();
+    if (!q || busy) return;
+    setMsgs((m) => [...m, { id: crypto.randomUUID(), role: "user", text: q }]);
     setDraft("");
-    queueMicrotask(() => listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" }));
+
+    const answer = await ask(q).catch((e) => `Error: ${e.message}`);
+    setMsgs((m) => [...m, { id: crypto.randomUUID(), role: "ai", text: answer }]);
+    queueMicrotask(() =>
+      listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" })
+    );
   }
 
   return (
@@ -40,6 +55,9 @@ export default function LLMFullView() {
       </div>
 
       <div ref={listRef} className="flex-1 overflow-y-auto px-5 py-4 space-y-3 text-black">
+        {msgs.length === 0 && (
+          <div className="text-sm text-neutral-500">Mulai obrolan dengan bertanya apa saja…</div>
+        )}
         {msgs.map((m) => (
           <div
             key={m.id}
@@ -62,10 +80,11 @@ export default function LLMFullView() {
             onChange={(e) => setDraft(e.target.value)}
           />
           <button
-            className="rounded-lg px-4 py-2 font-inter text-sm text-black bg-gradient-to-r from-[#FFE970] to-[#FF8B0C] hover:brightness-105"
+            disabled={busy}
+            className="cursor-pointer rounded-lg px-4 py-2 font-inter text-sm text-black bg-gradient-to-r from-[#FFE970] to-[#FF8B0C] hover:brightness-105 disabled:opacity-60"
             type="submit"
           >
-            Send
+            {busy ? "Sending…" : "Send"}
           </button>
         </div>
       </form>

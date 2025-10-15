@@ -6,16 +6,33 @@ import SummarizeView from "./parts/SummarizeView";
 import LLMView from "./parts/LLMView";
 import LLMFullView from "./LLMFullView";
 import FlashcardsView from "./parts/FlashcardsView";
+import { BASE } from "../../../lib/api";
 
 export type SectionKey = "summarize" | "ai" | "flashcards";
 
+type DocRow = {
+  id: string;
+  title: string;
+  url?: string;
+  status?: string;
+  summary?: string | null;
+  flashcards?: { question: string; answer: string }[] | null;
+  slug?: string | null;
+};
+
 export default function NoteDetailClient({ slug }: { slug: string }) {
-  const title = useMemo(() => {
-    const s = decodeURIComponent(slug || "");
-    return s ? s.replace(/-/g, " ").replace(/\b\w/g, (m) => m.toUpperCase()) : "Dummy Title";
-  }, [slug]);
+  const fetchUrl = `${BASE}/documents/${encodeURIComponent(slug)}`;
+
+  const [doc, setDoc] = useState<DocRow | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState<string | null>(null);
 
   const [section, setSection] = useState<SectionKey>("summarize");
+
+  const title = useMemo(
+    () => doc?.title ?? "Document",
+    [doc]
+  );
 
   useEffect(() => {
     const map = (h: string): SectionKey | null =>
@@ -37,6 +54,24 @@ export default function NoteDetailClient({ slug }: { slug: string }) {
     history.replaceState(null, "", k === "ai" ? "#ai" : k === "flashcards" ? "#flashcards" : "#summarize");
   };
 
+  useEffect(() => {
+    let stop = false;
+    (async () => {
+      setLoading(true); setErr(null);
+      try {
+        const r = await fetch(fetchUrl);
+        if (!r.ok) throw new Error((await r.text()) || "Failed to load document");
+        const j = await r.json();
+        if (!stop) setDoc(j.data as DocRow);
+      } catch (e: any) {
+        if (!stop) setErr(e?.message || "Failed");
+      } finally {
+        if (!stop) setLoading(false);
+      }
+    })();
+    return () => { stop = true; };
+  }, [fetchUrl]);
+
   return (
     <div className="min-h-screen bg-[#FFFAF6]">
       <CurrentSidebar active={section} onChange={setAndHash} />
@@ -51,16 +86,27 @@ export default function NoteDetailClient({ slug }: { slug: string }) {
             <div className="font-inter text-[12px] text-neutral-600">Review notes and ask the AI</div>
           </div>
 
-          {section === "summarize" && (
-            <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_560px]">
-              <SummarizeView />
-              <LLMView />
-            </div>
+          {loading && <div className="text-sm text-neutral-600">Loading document…</div>}
+          {err && (
+            <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{err}</div>
           )}
 
-          {section === "ai" && <LLMFullView />}
+          {!loading && !err && doc && (
+            <>
+              {section === "summarize" && (
+                <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_560px]">
+                  <SummarizeView summary={doc.summary ?? ""} />
+                  <LLMView />
+                </div>
+              )}
 
-          {section === "flashcards" && <FlashcardsView />}
+              {section === "ai" && <LLMFullView />}
+
+              {section === "flashcards" && (
+                <FlashcardsView cards={(doc.flashcards ?? []).map((c, i) => ({ id: String(i+1), ...c }))} />
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>
