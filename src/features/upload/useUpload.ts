@@ -1,12 +1,14 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import { useRouter } from "next/navigation";
 import { uploadPdf } from "../../lib/api";
 import type { UploadState } from "./types";
 import { getUserId } from "../../lib/session";
 
 export function useUpload() {
   const [state, setState] = useState<UploadState>({ status: "idle" });
+  const router = useRouter();
 
   const onFile = useCallback(async (file: File) => {
     if (!file) return;
@@ -27,15 +29,20 @@ export function useUpload() {
 
     try {
       const userId = getUserId();
-      const res = await uploadPdf(file, userId); 
+      const res = await uploadPdf(file, userId);
 
       clearInterval(progressTimer);
 
+      const doc = res?.document;
       setState({
         status: "success",
         filename: file.name,
-        docUrl: res?.document?.url,
+        docUrl: doc?.url,
       });
+
+      if (doc?.id && doc?.slug) {
+        router.push(`/notes/${doc.slug}?doc_id=${doc.id}&slug=${doc.slug}`);
+      }
     } catch (e: any) {
       clearInterval(progressTimer);
       setState({
@@ -44,7 +51,7 @@ export function useUpload() {
         filename: file.name,
       });
     }
-  }, []);
+  }, [router]);
 
   return { state, onFile, setState };
 }

@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { BASE } from "../../../lib/api";
+import { useDocParams } from "../../../lib/useDocParams";
 
 type Msg = { id: string; role: "user" | "ai"; text: string };
 
@@ -11,10 +12,16 @@ export default function LLMFullView() {
   const [busy, setBusy] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
+  const { docId, slug } = useDocParams();
+
   async function ask(question: string) {
     setBusy(true);
     try {
-      const r = await fetch(`${BASE}/api/qa`, {
+      const url = new URL(`${BASE}/api/qa`);
+      if (docId) url.searchParams.set("doc_id", docId);
+      if (slug)  url.searchParams.set("slug", slug);
+
+      const r = await fetch(url.toString(), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question }),
@@ -29,6 +36,19 @@ export default function LLMFullView() {
 
   async function send(e: React.FormEvent) {
     e.preventDefault();
+    if (!docId && !slug) {
+      setMsgs((m) => [
+        ...m,
+        {
+          id: crypto.randomUUID(),
+          role: "ai",
+          text:
+            "Belum terhubung ke dokumen. Buka dari halaman detail dokumen atau tambahkan ?doc_id=… / ?slug=… di URL.",
+        },
+      ]);
+      return;
+    }
+
     const q = draft.trim();
     if (!q || busy) return;
     setMsgs((m) => [...m, { id: crypto.randomUUID(), role: "user", text: q }]);
@@ -56,7 +76,11 @@ export default function LLMFullView() {
 
       <div ref={listRef} className="flex-1 overflow-y-auto px-5 py-4 space-y-3 text-black">
         {msgs.length === 0 && (
-          <div className="text-sm text-neutral-500">Mulai obrolan dengan bertanya apa saja…</div>
+          <div className="text-sm text-neutral-500">
+            {docId || slug
+              ? "Mulai obrolan dengan bertanya apa saja…"
+              : "Dokumen belum terpilih — upload atau buka halaman detail dokumen."}
+          </div>
         )}
         {msgs.map((m) => (
           <div
