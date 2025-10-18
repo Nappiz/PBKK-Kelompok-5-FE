@@ -9,7 +9,6 @@ type Props = {
 
 export default function UploadCta({ onFile }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
-
   const { state, onFile: onFileInternal } = useUpload();
 
   const handlePick = () => inputRef.current?.click();
@@ -20,7 +19,7 @@ export default function UploadCta({ onFile }: Props) {
       if (onFile) {
         void onFile(f);
       } else {
-        onFileInternal(f);
+        onFileInternal(f); 
       }
     }
     e.currentTarget.value = "";

@@ -2,14 +2,22 @@ export default function NoteCard({
   title,
   description,
   href,
+  docId,
+  slug,
 }: {
   title: string;
   description?: string;
   href?: string;
+  docId?: string;
+  slug?: string;
 }) {
+  const builtHref =
+    href ||
+    (docId && slug ? `/notes/${slug}?doc_id=${docId}&slug=${slug}` : "#");
+
   return (
     <a
-      href={href || "#"}
+      href={builtHref}
       className="flex items-start gap-3 rounded-xl bg-gradient-to-r from-[#FFE970] to-[#FF8B0C] p-[2px] transition-transform hover:translate-y-[-1px]"
     >
       <div className="flex w-full items-center gap-3 rounded-[10px] px-3 py-3">
