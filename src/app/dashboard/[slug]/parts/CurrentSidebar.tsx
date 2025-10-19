@@ -4,22 +4,20 @@ import { useEffect, useRef, useState } from "react";
 import { clearSession } from "../../../../lib/session";
 
 type Props = {
-  /** section aktif untuk highlighting menu */
   active?: "summarize" | "ai" | "flashcards";
-  /** dipanggil saat user klik item menu kiri */
   onChange?: (k: "summarize" | "ai" | "flashcards") => void;
+  userName: string;
 };
 
-export default function CurrentSidebar({ active = "summarize", onChange }: Props) {
+export default function CurrentSidebar({ active = "summarize", onChange, userName }: Props) {
   const [expanded, setExpanded] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // set initial state by breakpoint dan pasang CSS variable `--sbw`
   useEffect(() => {
     const mql = window.matchMedia("(min-width: 768px)");
     const apply = () => {
-      const exp = mql.matches;           // md ke atas default expanded
+      const exp = mql.matches; 
       setExpanded(exp);
       document.documentElement.style.setProperty("--sbw", exp ? "256px" : "56px");
     };
@@ -28,18 +26,11 @@ export default function CurrentSidebar({ active = "summarize", onChange }: Props
     return () => mql.removeEventListener("change", apply);
   }, []);
 
-  // update CSS variable saat toggle expand/collapse di md+
   useEffect(() => {
-    // pada mobile kita pakai overlay, jadi tidak butuh padding kiri -> 0
     const isMd = window.matchMedia("(min-width: 768px)").matches;
-    if (isMd) {
-      document.documentElement.style.setProperty("--sbw", expanded ? "256px" : "56px");
-    } else {
-      document.documentElement.style.setProperty("--sbw", "0px");
-    }
+    document.documentElement.style.setProperty("--sbw", isMd ? (expanded ? "256px" : "56px") : "0px");
   }, [expanded]);
 
-  // tutup menu user jika klik di luar
   useEffect(() => {
     function onDoc(e: MouseEvent) {
       if (!menuRef.current) return;
@@ -97,7 +88,6 @@ export default function CurrentSidebar({ active = "summarize", onChange }: Props
           </div>
         </div>
 
-        {/* menu */}
         <nav className="mt-6 space-y-1 px-2">
           <a
             href="/dashboard"
@@ -150,7 +140,6 @@ export default function CurrentSidebar({ active = "summarize", onChange }: Props
           </button>
         </nav>
 
-        {/* user panel */}
         <div className="absolute bottom-3 left-0 right-0 px-3" ref={menuRef}>
           <button
             onClick={() => setMenuOpen((v) => !v)}
@@ -167,7 +156,9 @@ export default function CurrentSidebar({ active = "summarize", onChange }: Props
             </span>
             {expanded && (
               <div className="min-w-0" suppressHydrationWarning>
-                <div className="truncate font-krona text-[11px]">Superadmin</div>
+                <div className="truncate font-krona text-[11px]">
+                  {userName || "—"}
+                </div>
                 <div className="text-[10px] opacity-70">Logged in</div>
               </div>
             )}
