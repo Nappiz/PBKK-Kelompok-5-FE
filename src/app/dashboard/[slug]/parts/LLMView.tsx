@@ -1,3 +1,4 @@
+// /app/dashboard/[slug]/parts/LLMView.tsx
 "use client";
 
 import { useRef, useState } from "react";
@@ -5,8 +6,9 @@ import { BASE } from "../../../../lib/api";
 import { useDocParams } from "../../../../lib/useDocParams";
 
 type Msg = { id: string; role: "user" | "ai"; text: string };
+type HeightMode = "full" | "compact";
 
-export default function LLMView() {
+export default function LLMView({ height = "full" }: { height?: HeightMode }) {
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
@@ -19,7 +21,7 @@ export default function LLMView() {
     try {
       const url = new URL(`${BASE}/api/qa`);
       if (docId) url.searchParams.set("doc_id", docId);
-      if (slug)  url.searchParams.set("slug", slug);
+      if (slug) url.searchParams.set("slug", slug);
 
       const r = await fetch(url.toString(), {
         method: "POST",
@@ -61,8 +63,18 @@ export default function LLMView() {
     );
   }
 
+  const heightClass =
+    height === "compact"
+      ? "min-h-[280px] h-auto"
+      : "min-h-[420px] h-[calc(100svh-160px)]";
+
   return (
-    <aside className="rounded-xl bg-white shadow-sm ring-1 ring-black/10 p-5 flex flex-col min-h-[420px] h-[calc(100svh-160px)]">
+    <aside
+      className={[
+        "rounded-xl bg-white shadow-sm ring-1 ring-black/10 p-5 flex flex-col",
+        heightClass,
+      ].join(" ")}
+    >
       <div className="mb-4 text-center">
         <div className="flex items-center justify-center gap-2">
           <img src="/images/Mascot.png" alt="" className="h-6 w-6" />

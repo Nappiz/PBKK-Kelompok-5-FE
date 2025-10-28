@@ -7,8 +7,9 @@ import SummarizeView from "./parts/SummarizeView";
 import LLMView from "./parts/LLMView";
 import LLMFullView from "./LLMFullView";
 import FlashcardsView from "./parts/FlashcardsView";
+import PdfPane from "./parts/PdfPane"; // ⬅️ NEW
 import { BASE } from "../../../lib/api";
-import { getSession } from "../../../lib/session"; 
+import { getSession } from "../../../lib/session";
 
 export type SectionKey = "summarize" | "ai" | "flashcards";
 
@@ -24,7 +25,7 @@ type DocRow = {
 
 export default function NoteDetailClient({ slug }: { slug: string }) {
   const fetchUrl = `${BASE}/documents/${encodeURIComponent(slug)}`;
-  const [userName, setUserName] = useState<string>(""); // <-- mulai kosong
+  const [userName, setUserName] = useState<string>("");
   const [doc, setDoc] = useState<DocRow | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
@@ -62,11 +63,7 @@ export default function NoteDetailClient({ slug }: { slug: string }) {
 
   const setAndHash = (k: SectionKey) => {
     setSection(k);
-    history.replaceState(
-      null,
-      "",
-      k === "ai" ? "#ai" : k === "flashcards" ? "#flashcards" : "#summarize"
-    );
+    history.replaceState(null, "", k === "ai" ? "#ai" : k === "flashcards" ? "#flashcards" : "#summarize");
   };
 
   useEffect(() => {
@@ -103,24 +100,28 @@ export default function NoteDetailClient({ slug }: { slug: string }) {
             <div className="font-krona text-[22px] md:text-[24px] text-black leading-tight">
               {title}
             </div>
-            <div className="font-inter text-[12px] text-neutral-600">
-              Review notes and ask the AI
-            </div>
+            <div className="font-inter text-[12px] text-neutral-600">Review notes and ask the AI</div>
           </div>
 
           {loading && <div className="text-sm text-neutral-600">Loading document…</div>}
           {err && (
-            <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-              {err}
-            </div>
+            <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{err}</div>
           )}
 
           {!loading && !err && doc && (
             <>
               {section === "summarize" && (
-                <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_560px]">
+                <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+                  {/* kiri: Summary */}
                   <SummarizeView summary={doc.summary ?? ""} />
-                  <LLMView />
+
+                  {/* kanan: PDF asli */}
+                  <PdfPane url={doc.url} title={doc.title} />
+
+                  {/* bawah full: LLM (compact height) */}
+                  <div className="xl:col-span-2">
+                    <LLMView height="compact" />
+                  </div>
                 </div>
               )}
 
