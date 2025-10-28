@@ -149,3 +149,47 @@ export async function apiFlashcards(question_hint?: string) {
     };
   }>;
 }
+
+// lib/api.ts
+
+async function parseJsonSafe(r: Response) {
+  const text = await r.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    // lempar pesan yang berguna (potongan HTML/teks) biar kelihatan kenapa
+    throw new Error(`${r.status} ${r.statusText}: ${text.slice(0, 500)}`);
+  }
+}
+
+export async function apiDeleteDocument(docId: string) {
+  const r = await fetch(
+    u(`documents/${encodeURIComponent(docId)}`),
+    {
+      method: "DELETE",
+      credentials: "include",
+      headers: { Accept: "application/json" },
+    }
+  );
+  const data = await parseJsonSafe(r);
+  if (!r.ok) throw new Error(data?.detail || JSON.stringify(data));
+  return data;
+}
+
+export async function apiRenameDocument(docId: string, title: string) {
+  const r = await fetch(
+    u(`documents/${encodeURIComponent(docId)}`),
+    {
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({ title }),
+    }
+  );
+  const data = await parseJsonSafe(r);
+  if (!r.ok) throw new Error(data?.detail || JSON.stringify(data));
+  return data;
+}

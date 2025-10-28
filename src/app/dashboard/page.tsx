@@ -13,12 +13,16 @@ import {
   apiJobStatus,
   apiSummarize,
   apiFlashcards,
+  // NEW:
+  apiDeleteDocument,
+  apiRenameDocument,
 } from "../../lib/api";
 
 type Doc = {
   id: string;
   title: string;
   url?: string;
+  slug?: string;
   created_at?: string;
 };
 
@@ -47,12 +51,15 @@ export default function DashboardPage() {
       const res = await apiListDocuments(userId);
       const rows = (res?.data ?? []) as any[];
       const mapped: Doc[] = rows.map((r) => ({
-        id: String(r.id ?? r.slug ?? r.title ?? ""),
+        id: String(r.id ?? ""),
         title: String(r.title ?? r.name ?? "Untitled"),
+        slug: r.slug ? String(r.slug) : undefined,
         url:
           typeof r.id === "string"
             ? `/dashboard/${r.id}`
-            : `/dashboard/${encodeURIComponent(String(r.title ?? "untitled").toLowerCase().replace(/\s+/g, "-"))}`,
+            : `/dashboard/${encodeURIComponent(
+                String(r.title ?? "untitled").toLowerCase().replace(/\s+/g, "-")
+              )}`,
         created_at: r.created_at,
       }));
       setDocs(mapped);
@@ -114,7 +121,7 @@ export default function DashboardPage() {
         setStage("Generating summary…");
         setProgress(98);
         try {
-          await apiSummarize(); 
+          await apiSummarize();
         } catch (e) {
           console.warn("summarize warmup failed:", e);
         }
@@ -134,7 +141,7 @@ export default function DashboardPage() {
         console.error(e);
         alert(e?.message || "Upload failed");
       } finally {
-        setTimeout(() => setModalOpen(false), 600); 
+        setTimeout(() => setModalOpen(false), 600);
       }
     },
     [userId, fetchDocs]
@@ -149,6 +156,40 @@ export default function DashboardPage() {
         (d.url ?? "").toLowerCase().includes(q)
     );
   }, [docs, query]);
+
+  // NEW: handlers
+  const handleDelete = useCallback(
+    async (docId: string) => {
+      try {
+        // optimistic UI
+        setDocs((prev) => prev.filter((d) => d.id !== docId));
+        await apiDeleteDocument(docId);
+      } catch (e: any) {
+        alert(e?.message || "Delete failed");
+        // reload if error
+        fetchDocs();
+      }
+    },
+    [fetchDocs]
+  );
+
+  const handleRename = useCallback(
+    async (docId: string, newTitle: string) => {
+      try {
+        // optimistic UI
+        setDocs((prev) =>
+          prev.map((d) => (d.id === docId ? { ...d, title: newTitle } : d))
+        );
+        await apiRenameDocument(docId, newTitle);
+        // refresh to get new slug if needed
+        fetchDocs();
+      } catch (e: any) {
+        alert(e?.message || "Rename failed");
+        fetchDocs();
+      }
+    },
+    [fetchDocs]
+  );
 
   return (
     <div className="min-h-screen bg-[#FFFAF6] text-neutral-900">
@@ -183,8 +224,16 @@ export default function DashboardPage() {
                   <NoteCard
                     key={d.id}
                     title={d.title}
-                    description={new Date(d.created_at ?? Date.now()).toLocaleString()}
+                    description={
+                      d.created_at
+                        ? new Date(d.created_at).toLocaleString()
+                        : undefined
+                    }
                     href={d.url}
+                    docId={d.id}
+                    slug={d.slug}
+                    onDelete={handleDelete}
+                    onRename={handleRename}
                   />
                 ))}
 

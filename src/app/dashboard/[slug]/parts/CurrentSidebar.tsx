@@ -121,7 +121,7 @@ export default function CurrentSidebar({ active = "summarize", onChange, userNam
             ].join(" ")}
           >
             <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-black/10">
-              <img src="/images/ai.png" alt="" className="h-5 w-5" />
+              <img src="/images/Ai.png" alt="" className="h-5 w-5" />
             </span>
             {expanded && <span>AI LLM</span>}
           </button>
