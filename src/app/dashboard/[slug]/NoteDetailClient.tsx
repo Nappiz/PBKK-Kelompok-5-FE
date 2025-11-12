@@ -1,4 +1,3 @@
-// /app/dashboard/[slug]/NoteDetailClient.tsx
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
@@ -7,7 +6,7 @@ import SummarizeView from "./parts/SummarizeView";
 import LLMView from "./parts/LLMView";
 import LLMFullView from "./LLMFullView";
 import FlashcardsView from "./parts/FlashcardsView";
-import PdfPane from "./parts/PdfPane"; // ⬅️ NEW
+import PdfPane from "./parts/PdfPane"; 
 import { BASE } from "../../../lib/api";
 import { getSession } from "../../../lib/session";
 
@@ -21,6 +20,7 @@ type DocRow = {
   summary?: string | null;
   flashcards?: { question: string; answer: string }[] | null;
   slug?: string | null;
+  image_urls?: string[] | null;
 };
 
 export default function NoteDetailClient({ slug }: { slug: string }) {
@@ -112,13 +112,17 @@ export default function NoteDetailClient({ slug }: { slug: string }) {
             <>
               {section === "summarize" && (
                 <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
-                  {/* kiri: Summary */}
-                  <SummarizeView summary={doc.summary ?? ""} />
+                  <SummarizeView
+                    summary={doc.summary ?? ""}
+                    images={(doc.image_urls ?? []).map((url, index) => ({
+                      url,
+                      page: index + 1,
+                      label: `Gambar halaman ${index + 1}`,
+                    }))}
+                  />
 
-                  {/* kanan: PDF asli */}
                   <PdfPane url={doc.url} title={doc.title} />
 
-                  {/* bawah full: LLM (compact height) */}
                   <div className="xl:col-span-2">
                     <LLMView height="compact" />
                   </div>
