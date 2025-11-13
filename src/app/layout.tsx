@@ -1,4 +1,5 @@
 import "./globals.css";
+import "katex/dist/katex.min.css";
 import { Krona_One, Inter } from "next/font/google";
 
 const krona = Krona_One({ subsets: ["latin"], weight: "400", variable: "--font-krona" });
