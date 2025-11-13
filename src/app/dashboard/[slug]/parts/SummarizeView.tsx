@@ -3,11 +3,13 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 
 type FigureImage = {
   url: string;
-  label?: string; 
-  page?: number;  
+  label?: string;
+  page?: number;
 };
 
 interface SummarizeViewProps {
@@ -15,9 +17,51 @@ interface SummarizeViewProps {
   images?: FigureImage[];
 }
 
+function normalizeSummaryMath(text: string): string {
+  if (!text) return text;
+  let t = text;
+
+  // 1) Ubah [ \text{...} ] => $ \text{...} $
+  t = t.replace(/\[(\s*\\[^\[\]]+?)\]/g, (_m, inner) => {
+    return `$${inner.trim()}$`;
+  });
+
+  // 2) \(...\) => $...$
+  t = t.replace(/\\\((.+?)\\\)/g, (_m, inner) => {
+    return `$${inner.trim()}$`;
+  });
+
+  // 3) \[ ... \] => $$...$$ (blok)
+  t = t.replace(/\\\[((?:.|\n)+?)\\\]/g, (_m, inner) => {
+    return `\n\n$$${inner.trim()}$$\n\n`;
+  });
+
+  // 4) \$ => $ (unescape dollar yang kebanyakan)
+  t = t.replace(/\\\$/g, "$");
+
+  // 5) Rapihin spasi di dalam $ ... $
+  t = t.replace(/\$\s+([^$]*?)\s+\$/g, (_m, inner) => {
+    return `$${inner.trim()}$`;
+  });
+
+  return t;
+}
+
+function normalizeMathBrackets(text: string): string {
+  if (!text) return text;
+  return text.replace(/\[(\s*\\[^|\[\]]+?)\]/g, (_m, inner) => {
+    return `$${inner.trim()}$`;
+  });
+}
+
 export default function SummarizeView({ summary, images = [] }: SummarizeViewProps) {
   const hasSummary = summary && summary.trim().length > 0;
   const hasImages = images.length > 0;
+
+  const normalizedSummary = React.useMemo(
+    () => (hasSummary ? normalizeSummaryMath(summary) : summary),
+    [summary, hasSummary]
+  );
 
   return (
     <section className="relative rounded-xl bg-white shadow-sm ring-1 ring-black/10 overflow-hidden min-h-[560px] h-[calc(100svh-160px)] pb-7">
@@ -42,7 +86,8 @@ export default function SummarizeView({ summary, images = [] }: SummarizeViewPro
             </p>
           ) : (
             <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
+              remarkPlugins={[remarkMath, remarkGfm]}
+              rehypePlugins={[rehypeKatex]}
               components={{
                 h1: ({ node, ...props }) => (
                   <h3
@@ -79,7 +124,7 @@ export default function SummarizeView({ summary, images = [] }: SummarizeViewPro
                 ),
               }}
             >
-              {summary}
+              {normalizedSummary}
             </ReactMarkdown>
           )}
 
