@@ -6,6 +6,9 @@ import { useDocParams } from "../../../lib/useDocParams";
 
 type Msg = { id: string; role: "user" | "ai"; text: string };
 
+const genId = () =>
+  `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+
 export default function LLMFullView() {
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [draft, setDraft] = useState("");
@@ -19,7 +22,7 @@ export default function LLMFullView() {
     try {
       const url = new URL(`${BASE}/api/qa`);
       if (docId) url.searchParams.set("doc_id", docId);
-      if (slug)  url.searchParams.set("slug", slug);
+      if (slug) url.searchParams.set("slug", slug);
 
       const r = await fetch(url.toString(), {
         method: "POST",
@@ -40,7 +43,7 @@ export default function LLMFullView() {
       setMsgs((m) => [
         ...m,
         {
-          id: crypto.randomUUID(),
+          id: genId(),
           role: "ai",
           text:
             "Belum terhubung ke dokumen. Buka dari halaman detail dokumen atau tambahkan ?doc_id=… / ?slug=… di URL.",
@@ -51,13 +54,18 @@ export default function LLMFullView() {
 
     const q = draft.trim();
     if (!q || busy) return;
-    setMsgs((m) => [...m, { id: crypto.randomUUID(), role: "user", text: q }]);
+
+    setMsgs((m) => [...m, { id: genId(), role: "user", text: q }]);
     setDraft("");
 
     const answer = await ask(q).catch((e) => `Error: ${e.message}`);
-    setMsgs((m) => [...m, { id: crypto.randomUUID(), role: "ai", text: answer }]);
+    setMsgs((m) => [...m, { id: genId(), role: "ai", text: answer }]);
+
     queueMicrotask(() =>
-      listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" })
+      listRef.current?.scrollTo({
+        top: listRef.current.scrollHeight,
+        behavior: "smooth",
+      }),
     );
   }
 
@@ -74,7 +82,10 @@ export default function LLMFullView() {
         </p>
       </div>
 
-      <div ref={listRef} className="flex-1 overflow-y-auto px-5 py-4 space-y-3 text-black">
+      <div
+        ref={listRef}
+        className="flex-1 overflow-y-auto px-5 py-4 space-y-3 text-black"
+      >
         {msgs.length === 0 && (
           <div className="text-sm text-neutral-500">
             {docId || slug
