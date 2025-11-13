@@ -1,9 +1,16 @@
 const KEY = "learnwai_user_id";
 
+const genId = () =>
+  `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+
 export function getOrCreateUserId() {
   if (typeof window === "undefined") return undefined;
+
   let uid = localStorage.getItem(KEY);
-  if (!uid) { uid = crypto.randomUUID(); localStorage.setItem(KEY, uid); }
+  if (!uid) {
+    uid = genId();
+    localStorage.setItem(KEY, uid);
+  }
   return uid;
 }
 

@@ -1,4 +1,3 @@
-// /app/dashboard/[slug]/parts/LLMView.tsx
 "use client";
 
 import { useRef, useState } from "react";
@@ -7,6 +6,9 @@ import { useDocParams } from "../../../../lib/useDocParams";
 
 type Msg = { id: string; role: "user" | "ai"; text: string };
 type HeightMode = "full" | "compact";
+
+const genId = () =>
+  `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 
 export default function LLMView({ height = "full" }: { height?: HeightMode }) {
   const [msgs, setMsgs] = useState<Msg[]>([]);
@@ -42,7 +44,7 @@ export default function LLMView({ height = "full" }: { height?: HeightMode }) {
       setMsgs((m) => [
         ...m,
         {
-          id: crypto.randomUUID(),
+          id: genId(),
           role: "ai",
           text:
             "Belum terhubung ke dokumen. Buka dari halaman detail dokumen atau tambahkan ?doc_id=… / ?slug=… di URL.",
@@ -53,13 +55,18 @@ export default function LLMView({ height = "full" }: { height?: HeightMode }) {
 
     const q = draft.trim();
     if (!q || busy) return;
-    setMsgs((m) => [...m, { id: crypto.randomUUID(), role: "user", text: q }]);
+
+    setMsgs((m) => [...m, { id: genId(), role: "user", text: q }]);
     setDraft("");
 
     const answer = await ask(q).catch((e) => `Error: ${e.message}`);
-    setMsgs((m) => [...m, { id: crypto.randomUUID(), role: "ai", text: answer }]);
+    setMsgs((m) => [...m, { id: genId(), role: "ai", text: answer }]);
+
     queueMicrotask(() =>
-      listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" })
+      listRef.current?.scrollTo({
+        top: listRef.current.scrollHeight,
+        behavior: "smooth",
+      }),
     );
   }
 
@@ -78,7 +85,9 @@ export default function LLMView({ height = "full" }: { height?: HeightMode }) {
       <div className="mb-4 text-center">
         <div className="flex items-center justify-center gap-2">
           <img src="/images/Mascot.png" alt="" className="h-6 w-6" />
-          <h3 className="font-krona text-[18px] text-black">Ask AI and Learn More!</h3>
+          <h3 className="font-krona text-[18px] text-black">
+            Ask AI and Learn More!
+          </h3>
           <img src="/images/Mascot.png" alt="" className="h-6 w-6" />
         </div>
         <p className="mt-1 text-[12px] text-neutral-600">
@@ -107,7 +116,10 @@ export default function LLMView({ height = "full" }: { height?: HeightMode }) {
         ))}
       </div>
 
-      <form onSubmit={send} className="mt-4 rounded-xl border-2 border-[#FFBD71] bg-white p-2">
+      <form
+        onSubmit={send}
+        className="mt-4 rounded-xl border-2 border-[#FFBD71] bg-white p-2"
+      >
         <div className="flex items-center gap-2">
           <input
             className="text-black flex-1 rounded-lg border-0 bg-transparent px-3 py-2 text-sm outline-none placeholder:text-neutral-400"
