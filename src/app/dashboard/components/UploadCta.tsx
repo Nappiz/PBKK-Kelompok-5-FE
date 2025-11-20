@@ -33,7 +33,7 @@ export default function UploadCta({ onFile }: Props) {
         className="cursor-pointer group inline-flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-black bg-gradient-to-r from-[#FFE970] to-[#FF8B0C] shadow-sm hover:shadow-md"
       >
         <span className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-white/30">
-          <img src="/images/pdf2.png" alt="" className="h-5 w-5" />
+          <img src="images/pdf2.png" alt="" className="h-5 w-5" />
         </span>
 
         <span className="flex min-w-0 flex-col items-start">

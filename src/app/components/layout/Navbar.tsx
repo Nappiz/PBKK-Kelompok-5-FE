@@ -80,13 +80,13 @@ export default function Navbar() {
         <div className="p-4 space-y-3">
           {user ? (
             <>
-              <a href="/learnwai/dashboard" className="block w-full rounded-full border border-white bg-transparent px-5 py-3 text-center font-krona text-black text-[15px] hover:bg-white/20" onClick={() => setOpen(false)}>Dashboard</a>
+              <a href={`${BASE}/dashboard`} className="block w-full rounded-full border border-white bg-transparent px-5 py-3 text-center font-krona text-black text-[15px] hover:bg-white/20" onClick={() => setOpen(false)}>Dashboard</a>
               <button className="block w-full rounded-full border border-white bg-transparent px-5 py-3 text-center font-krona text-black text-[15px] hover:bg-white/20" onClick={() => { setOpen(false); onLogout(); }}>Log out</button>
             </>
           ) : (
             <>
-              <a href="/learnwai/register" className="block w-full rounded-full border border-white bg-transparent px-5 py-3 text-center font-krona text-black text-[15px] hover:bg-white/20" onClick={() => setOpen(false)}>Register</a>
-              <a href="/learnwai/login" className="block w-full rounded-full border border-white bg-transparent px-5 py-3 text-center font-krona text-black text-[15px] hover:bg-white/20" onClick={() => setOpen(false)}>Login</a>
+              <a href={`${BASE}/register`} className="block w-full rounded-full border border-white bg-transparent px-5 py-3 text-center font-krona text-black text-[15px] hover:bg-white/20" onClick={() => setOpen(false)}>Register</a>
+              <a href={`${BASE}/login`} className="block w-full rounded-full border border-white bg-transparent px-5 py-3 text-center font-krona text-black text-[15px] hover:bg-white/20" onClick={() => setOpen(false)}>Login</a>
             </>
           )}
         </div>

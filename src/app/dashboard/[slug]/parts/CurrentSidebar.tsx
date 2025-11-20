@@ -68,7 +68,7 @@ export default function CurrentSidebar({ active = "summarize", onChange, userNam
         ].join(" ")}
       >
         <div className="flex items-center gap-2 px-4 pt-4">
-          <img src="/images/Logo.png" alt="LearnWAI" className="h-7 w-7" />
+          <img src="images/Logo.png" alt="LearnWAI" className="h-7 w-7" />
           {expanded && <span className="font-krona text-sm text-black">LearnWAI</span>}
           <div className="ml-auto hidden md:block">
             <button
@@ -96,7 +96,7 @@ export default function CurrentSidebar({ active = "summarize", onChange, userNam
             title="Back to Dashboard"
           >
             <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-black/10">
-              <img src="/images/home.png" alt="" className="h-5 w-5" />
+              <img src="images/home.png" alt="" className="h-5 w-5" />
             </span>
             {expanded && <span>Back to Dashboard</span>}
           </a>
@@ -109,7 +109,7 @@ export default function CurrentSidebar({ active = "summarize", onChange, userNam
             ].join(" ")}
           >
             <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-black/10">
-              <img src="/images/summarize.png" alt="" className="h-5 w-5" />
+              <img src="images/summarize.png" alt="" className="h-5 w-5" />
             </span>
             {expanded && <span>Summarize</span>}
           </button>
@@ -122,7 +122,7 @@ export default function CurrentSidebar({ active = "summarize", onChange, userNam
             ].join(" ")}
           >
             <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-black/10">
-              <img src="/images/Ai.png" alt="" className="h-5 w-5" />
+              <img src="images/Ai.png" alt="" className="h-5 w-5" />
             </span>
             {expanded && <span>AI LLM</span>}
           </button>
@@ -135,7 +135,7 @@ export default function CurrentSidebar({ active = "summarize", onChange, userNam
             ].join(" ")}
           >
             <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-black/10">
-              <img src="/images/flash.png" alt="" className="h-5 w-5" />
+              <img src="images/flash.png" alt="" className="h-5 w-5" />
             </span>
             {expanded && <span>Flashcards</span>}
           </button>
