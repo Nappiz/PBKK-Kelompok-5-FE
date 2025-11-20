@@ -34,7 +34,7 @@ export default function Body() {
       </div>
 
       <img
-        src="/images/SeperatorUpsideDown.png"
+        src="images/SeperatorUpsideDown.png"
         alt=""
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-0 z-0 -translate-x-1/2 h-[160px] w-full max-w-[1920px] object-cover select-none"
@@ -53,13 +53,13 @@ export default function Body() {
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           <Reveal>
-            <FeatureCard image="/images/Summarizer.png" title="Summarizer" subtitle="Summarize your notes" />
+            <FeatureCard image="images/Summarizer.png" title="Summarizer" subtitle="Summarize your notes" />
           </Reveal>
           <Reveal className="delay-75">
-            <FeatureCard image="/images/Ask.png" title="AskAI" subtitle="Ask AI to further understand your notes" />
+            <FeatureCard image="images/Ask.png" title="AskAI" subtitle="Ask AI to further understand your notes" />
           </Reveal>
           <Reveal className="delay-150">
-            <FeatureCard image="/images/Practice.png" title="PracticeAI" subtitle="Let AI make practice questions for you" />
+            <FeatureCard image="images/Practice.png" title="PracticeAI" subtitle="Let AI make practice questions for you" />
           </Reveal>
         </div>
 
@@ -75,16 +75,16 @@ export default function Body() {
         <Reveal className="mt-10 block">
           <HowSteps
             steps={[
-              { icon: "/images/Upload.png", title: "1. Upload",       desc: "Drag & Drop" },
-              { icon: "/images/Ai.png",     title: "2. AI Summarize",  desc: "Get clean notes with highlights" },
-              { icon: "/images/Quiz.png",   title: "3. Practice Quiz", desc: "Review with flashcards and quizzes" },
+              { icon: "images/Upload.png", title: "1. Upload",       desc: "Drag & Drop" },
+              { icon: "images/Ai.png",     title: "2. AI Summarize",  desc: "Get clean notes with highlights" },
+              { icon: "images/Quiz.png",   title: "3. Practice Quiz", desc: "Review with flashcards and quizzes" },
             ]}
           />
         </Reveal>
       </div>
 
       <img
-        src="/images/Seperator.png"
+        src="images/Seperator.png"
         alt=""
         aria-hidden
         className="pointer-events-none absolute bottom-0 left-1/2 z-0 -translate-x-1/2 h-[180px] w-full max-w-[1920px] object-cover"

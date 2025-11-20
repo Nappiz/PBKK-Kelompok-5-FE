@@ -53,7 +53,7 @@ export default function Sidebar({ userName }: { userName: string }) {
         ].join(" ")}
       >
         <div className="flex items-center gap-2 px-4 pt-4">
-          <img src="/images/Logo.png" alt="LearnWAI" className="h-7 w-7" />
+          <img src="images/Logo.png" alt="LearnWAI" className="h-7 w-7" />
           {expanded && <span className="font-krona text-sm text-black">LearnWAI</span>}
           <div className="ml-auto hidden md:block">
             <button
@@ -77,14 +77,14 @@ export default function Sidebar({ userName }: { userName: string }) {
         <nav className="mt-6 space-y-1 px-2">
           <a href={`${BASE}/dashboard`} className="flex items-center gap-3 rounded-lg px-2 py-2 text-sm font-medium text-black hover:bg-white/15">
             <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-black/10">
-              <img src="/images/home.png" alt="" className="h-5 w-5" />
+              <img src="images/home.png" alt="" className="h-5 w-5" />
             </span>
             {expanded && <span>Dashboard</span>}
           </a>
 
           <a href={`${BASE}/settings`} className="flex items-center gap-3 rounded-lg px-2 py-2 text-sm font-medium text-black/90 hover:bg-white/15">
             <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-black/10">
-              <img src="/images/settings.png" alt="" className="h-5 w-5" />
+              <img src="images/settings.png" alt="" className="h-5 w-5" />
             </span>
             {expanded && <span>Settings</span>}
           </a>

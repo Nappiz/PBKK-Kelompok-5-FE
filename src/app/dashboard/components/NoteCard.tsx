@@ -92,7 +92,7 @@ export default function NoteCard({
         "
       >
         <div className="flex w-full items-center gap-3 rounded-[10px] px-3 py-3">
-          <img src="/images/pdf2.png" alt="" className="h-8 w-8" />
+          <img src="images/pdf2.png" alt="" className="h-8 w-8" />
           <div className="min-w-0">
             <div className="truncate font-krona text-[13px] text-black">
               {title}

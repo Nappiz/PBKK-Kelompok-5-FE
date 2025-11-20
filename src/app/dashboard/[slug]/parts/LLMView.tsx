@@ -84,11 +84,11 @@ export default function LLMView({ height = "full" }: { height?: HeightMode }) {
     >
       <div className="mb-4 text-center">
         <div className="flex items-center justify-center gap-2">
-          <img src="/images/Mascot.png" alt="" className="h-6 w-6" />
+          <img src="images/Mascot.png" alt="" className="h-6 w-6" />
           <h3 className="font-krona text-[18px] text-black">
             Ask AI and Learn More!
           </h3>
-          <img src="/images/Mascot.png" alt="" className="h-6 w-6" />
+          <img src="images/Mascot.png" alt="" className="h-6 w-6" />
         </div>
         <p className="mt-1 text-[12px] text-neutral-600">
           Review your material with AI and ask away to clear any confusion!

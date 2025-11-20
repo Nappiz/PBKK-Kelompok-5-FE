@@ -68,7 +68,7 @@ export default function SummarizeView({ summary, images = [] }: SummarizeViewPro
       <div className="sticky top-0 z-10 flex items-center gap-2 border-b border-[#FFBD71]/60 bg-gradient-to-r from-[#FFE970] to-[#FF8B0C] px-3 py-2 text-[18px] font-semibold text-black">
         <div className="my-2 flex items-center justify-center">
           <span className="inline-flex h-5 w-5 items-center justify-center rounded-md mx-4">
-            <img src="/images/edit.png" alt="" className="h-5 w-5" />
+            <img src="images/edit.png" alt="" className="h-5 w-5" />
           </span>
           AI summary notes
         </div>

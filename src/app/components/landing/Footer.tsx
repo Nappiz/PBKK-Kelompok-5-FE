@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="flex flex-col">
           <div className="flex items-center gap-3">
             <img
-              src="/images/Logo.png"
+              src="images/Logo.png"
               alt="LearnWAI"
               className="h-10 w-10 md:h-12 md:w-12 select-none"
               draggable={false}
@@ -34,15 +34,15 @@ export default function Footer() {
             <div className="font-inter font-semibold">Social Media</div>
             <ul className="mt-2 space-y-2 font-inter text-sm">
               <li className="flex items-center gap-2 md:justify-start transition hover:translate-x-0.5">
-                <img src="/images/IG.png" alt="" className="h-4 w-4 select-none" />
+                <img src="images/IG.png" alt="" className="h-4 w-4 select-none" />
                 <span>Instagram</span>
               </li>
               <li className="flex items-center gap-2 md:justify-start transition hover:translate-x-0.5">
-                <img src="/images/YT.png" alt="" className="h-4 w-4 select-none" />
+                <img src="images/YT.png" alt="" className="h-4 w-4 select-none" />
                 <span>Youtube</span>
               </li>
               <li className="flex items-center gap-2 md:justify-start transition hover:translate-x-0.5">
-                <img src="/images/Linkedin.png" alt="" className="h-4 w-4 select-none" />
+                <img src="images/Linkedin.png" alt="" className="h-4 w-4 select-none" />
                 <span>LinkedIn</span>
               </li>
             </ul>

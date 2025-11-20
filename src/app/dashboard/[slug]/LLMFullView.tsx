@@ -73,9 +73,9 @@ export default function LLMFullView() {
     <section className="rounded-xl bg-white ring-1 ring-black/10 shadow-sm p-0 overflow-hidden min-h-[560px] h-[calc(100svh-160px)] flex flex-col">
       <div className="sticky top-0 z-10 border-b bg-white/95 px-5 py-4 backdrop-blur">
         <div className="flex items-center justify-center gap-2">
-          <img src="/images/Mascot.png" className="h-6 w-6" alt="" />
+          <img src="images/Mascot.png" className="h-6 w-6" alt="" />
           <h3 className="font-krona text-[20px] text-black">Ask AI</h3>
-          <img src="/images/Mascot.png" className="h-6 w-6" alt="" />
+          <img src="images/Mascot.png" className="h-6 w-6" alt="" />
         </div>
         <p className="mt-1 text-center text-[12px] text-neutral-600">
           Focused chat bot perfect for Q&amp;A.
