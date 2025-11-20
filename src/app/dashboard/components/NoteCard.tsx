@@ -22,8 +22,7 @@ export default function NoteCard({
   onDelete,
   onRename,
 }: Props) {
-  const builtHref =
-    href || (docId && slug ? `/notes/${slug}?doc_id=${docId}&slug=${slug}` : "#");
+  const builtHref = href || (docId && slug ? `/notes/${slug}?doc_id=${docId}&slug=${slug}` : "#");
 
   const canAct = Boolean(docId && (onDelete || onRename));
 
@@ -32,7 +31,6 @@ export default function NoteCard({
   const [showDelete, setShowDelete] = useState(false);
   const [newTitle, setNewTitle] = useState(title);
 
-  // focus refs
   const renameInputRef = useRef<HTMLInputElement | null>(null);
   const renameOpenOnce = useRef(false);
 
@@ -51,7 +49,6 @@ export default function NoteCard({
     }
   }, [showRename, title]);
 
-  // handlers
   const openRename: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -83,7 +80,6 @@ export default function NoteCard({
 
   return (
     <div className="relative group">
-      {/* Card */}
       <a
         href={builtHref}
         className="
@@ -110,7 +106,6 @@ export default function NoteCard({
         </div>
       </a>
 
-      {/* Action bar (ikut naik bareng) */}
       {canAct && (
         <div
           className="
@@ -167,7 +162,6 @@ export default function NoteCard({
         </div>
       )}
 
-      {/* ===== Rename Modal ===== */}
       {showRename && (
         <Modal onClose={() => setShowRename(false)}>
           <div className="w-full max-w-md rounded-2xl bg-white p-5 shadow-xl ring-1 ring-black/10">
@@ -232,7 +226,6 @@ export default function NoteCard({
   );
 }
 
-/** Lightweight Modal (click backdrop to close, esc support) */
 function Modal({
   children,
   onClose,
