@@ -7,7 +7,6 @@ export default function Sidebar({ userName }: { userName: string }) {
   const [expanded, setExpanded] = useState<boolean>(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const BASE = "/learnwai";
 
   useEffect(() => {
     const mql = window.matchMedia("(min-width: 768px)");
@@ -28,7 +27,7 @@ export default function Sidebar({ userName }: { userName: string }) {
 
   function onLogout() {
     clearSession();
-    window.location.href = `${BASE}/`;
+    window.location.href = "/";
   }
 
   return (

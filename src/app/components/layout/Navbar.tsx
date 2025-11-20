@@ -8,7 +8,7 @@ type User = { id: string; name: string; email: string } | null;
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<User>(null);
-  const BASE = "/learnwai";
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
@@ -19,20 +19,20 @@ export default function Navbar() {
   function onLogout() {
     clearSession();
     setUser(null);
-    window.location.href = `${BASE}/`; 
+    window.location.href = "/"; 
   }
 
   const AuthedButtons = () => (
     <>
-      <a href={`${BASE}/dashboard`} className="font-krona cursor-pointer text-black rounded-full border border-white bg-transparent px-5 py-1.5 text-[15px] hover:bg-white/20">Dashboard</a>
+      <a href="/dashboard" className="font-krona cursor-pointer text-black rounded-full border border-white bg-transparent px-5 py-1.5 text-[15px] hover:bg-white/20">Dashboard</a>
       <button onClick={onLogout} className="font-krona cursor-pointer text-black rounded-full border border-white bg-transparent px-5 py-1.5 text-[15px] hover:bg-white/20">Log out</button>
     </>
   );
 
   const GuestButtons = () => (
     <>
-      <a href={`${BASE}/register`} className="font-krona text-black rounded-full border border-white bg-transparent px-5 py-1.5 text-[15px] hover:bg-white/20">Register</a>
-      <a href={`${BASE}/login`} className="font-krona text-black rounded-full border border-white bg-transparent px-5 py-1.5 text-[15px] hover:bg-white/20">Login</a>
+      <a href="/register" className="font-krona text-black rounded-full border border-white bg-transparent px-5 py-1.5 text-[15px] hover:bg-white/20">Register</a>
+      <a href="/login" className="font-krona text-black rounded-full border border-white bg-transparent px-5 py-1.5 text-[15px] hover:bg-white/20">Login</a>
     </>
   );
 
@@ -80,13 +80,13 @@ export default function Navbar() {
         <div className="p-4 space-y-3">
           {user ? (
             <>
-              <a href="/learnwai/dashboard" className="block w-full rounded-full border border-white bg-transparent px-5 py-3 text-center font-krona text-black text-[15px] hover:bg-white/20" onClick={() => setOpen(false)}>Dashboard</a>
+              <a href="/dashboard" className="block w-full rounded-full border border-white bg-transparent px-5 py-3 text-center font-krona text-black text-[15px] hover:bg-white/20" onClick={() => setOpen(false)}>Dashboard</a>
               <button className="block w-full rounded-full border border-white bg-transparent px-5 py-3 text-center font-krona text-black text-[15px] hover:bg-white/20" onClick={() => { setOpen(false); onLogout(); }}>Log out</button>
             </>
           ) : (
             <>
-              <a href="/learnwai/register" className="block w-full rounded-full border border-white bg-transparent px-5 py-3 text-center font-krona text-black text-[15px] hover:bg-white/20" onClick={() => setOpen(false)}>Register</a>
-              <a href="/learnwai/login" className="block w-full rounded-full border border-white bg-transparent px-5 py-3 text-center font-krona text-black text-[15px] hover:bg-white/20" onClick={() => setOpen(false)}>Login</a>
+              <a href="/register" className="block w-full rounded-full border border-white bg-transparent px-5 py-3 text-center font-krona text-black text-[15px] hover:bg-white/20" onClick={() => setOpen(false)}>Register</a>
+              <a href="/login" className="block w-full rounded-full border border-white bg-transparent px-5 py-3 text-center font-krona text-black text-[15px] hover:bg-white/20" onClick={() => setOpen(false)}>Login</a>
             </>
           )}
         </div>
