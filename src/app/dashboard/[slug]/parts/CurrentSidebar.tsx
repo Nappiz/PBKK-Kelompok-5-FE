@@ -13,6 +13,7 @@ export default function CurrentSidebar({ active = "summarize", onChange, userNam
   const [expanded, setExpanded] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const BASE = "/learnwai";
 
   useEffect(() => {
     const mql = window.matchMedia("(min-width: 768px)");
@@ -42,7 +43,7 @@ export default function CurrentSidebar({ active = "summarize", onChange, userNam
 
   function onLogout() {
     clearSession();
-    window.location.href = "/";
+    window.location.href = `${BASE}/`;
   }
 
   return (
@@ -90,7 +91,7 @@ export default function CurrentSidebar({ active = "summarize", onChange, userNam
 
         <nav className="mt-6 space-y-1 px-2">
           <a
-            href="/dashboard"
+            href={`${BASE}/dashboard`}
             className="flex items-center gap-3 rounded-lg px-2 py-2 text-sm font-medium text-black hover:bg-white/15"
             title="Back to Dashboard"
           >
