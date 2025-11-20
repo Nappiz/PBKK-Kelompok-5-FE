@@ -10,6 +10,7 @@ import { setSession } from "../../lib/session";
 export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const BASE = "/LearnWai";
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -30,7 +31,7 @@ export default function RegisterPage() {
       if (res?.user?.id) {
         setSession({ id: res.user.id, name: res.user.name, email: res.user.email });
       }
-      window.location.href = "/dashboard";
+      window.location.href = `${BASE}/dashboard`;
     } catch (e: any) {
       setErr(e.message || "Registration failed");
     } finally {
@@ -82,7 +83,7 @@ export default function RegisterPage() {
         </button>
 
         <div className="mt-3 text-center">
-          <a href="/login" className="font-inter text-sm text-neutral-700 underline">
+          <a href={`${BASE}/login`} className="font-inter text-sm text-neutral-700 underline">
             Already have an account? Sign in
           </a>
         </div>

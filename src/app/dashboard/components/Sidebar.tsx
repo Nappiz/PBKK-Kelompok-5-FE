@@ -7,7 +7,7 @@ export default function Sidebar({ userName }: { userName: string }) {
   const [expanded, setExpanded] = useState<boolean>(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const BASE = "/learnwai";
+  const BASE = "/LearnWai";
 
   useEffect(() => {
     const mql = window.matchMedia("(min-width: 768px)");

@@ -13,7 +13,7 @@ export default function CurrentSidebar({ active = "summarize", onChange, userNam
   const [expanded, setExpanded] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const BASE = "/learnwai";
+  const BASE = "/LearnWai";
 
   useEffect(() => {
     const mql = window.matchMedia("(min-width: 768px)");

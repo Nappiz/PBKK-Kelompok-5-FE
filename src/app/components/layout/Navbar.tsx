@@ -8,7 +8,7 @@ type User = { id: string; name: string; email: string } | null;
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<User>(null);
-  const BASE = "/learnwai";
+  const BASE = "/LearnWai";
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);

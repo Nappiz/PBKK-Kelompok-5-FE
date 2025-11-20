@@ -37,7 +37,7 @@ export default function DashboardPage() {
   const [progress, setProgress] = useState<number>(0);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const BASE = "/learnwai";
+  const BASE = "/LearnWai";
 
   useEffect(() => {
     const s = getSession();

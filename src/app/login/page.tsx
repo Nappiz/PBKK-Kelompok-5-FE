@@ -10,6 +10,7 @@ import { setSession } from "../../lib/session";
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const BASE = "/LearnWai";
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -25,7 +26,7 @@ export default function LoginPage() {
       if (res?.user?.id) {
         setSession({ id: res.user.id, name: res.user.name, email: res.user.email });
       }
-      window.location.href = "/dashboard";
+      window.location.href = `${BASE}/dashboard`;
     } catch (e: any) {
       setErr(e.message || "Login failed");
     } finally {
@@ -65,11 +66,8 @@ export default function LoginPage() {
         </button>
 
         <div className="mt-3 flex items-center justify-between text-sm">
-          <a href="/register" className="font-inter text-neutral-700 underline">
+          <a href={`${BASE}/register`} className="font-inter text-neutral-700 underline">
             Create an account
-          </a>
-          <a href="#" className="font-inter text-neutral-700 underline">
-            Forgot password?
           </a>
         </div>
       </form>
