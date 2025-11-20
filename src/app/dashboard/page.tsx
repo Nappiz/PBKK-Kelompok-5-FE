@@ -13,6 +13,7 @@ import {
   apiJobStatus,
   apiSummarize,
   apiFlashcards,
+  // NEW:
   apiDeleteDocument,
   apiRenameDocument,
 } from "../../lib/api";
@@ -37,8 +38,6 @@ export default function DashboardPage() {
   const [progress, setProgress] = useState<number>(0);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const BASE = "/learnwai";
-
   useEffect(() => {
     const s = getSession();
     const name = (s?.name ?? s?.email ?? "Username") as string;
@@ -57,8 +56,10 @@ export default function DashboardPage() {
         slug: r.slug ? String(r.slug) : undefined,
         url:
           typeof r.id === "string"
-            ? `${BASE}/dashboard/${r.id}`
-            : `${BASE}/dashboard/${encodeURIComponent( String(r.title ?? "untitled").toLowerCase().replace(/\s+/g, "-"))}`,
+            ? `/dashboard/${r.id}`
+            : `/dashboard/${encodeURIComponent(
+                String(r.title ?? "untitled").toLowerCase().replace(/\s+/g, "-")
+              )}`,
         created_at: r.created_at,
       }));
       setDocs(mapped);
