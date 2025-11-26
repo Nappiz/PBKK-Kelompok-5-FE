@@ -3,12 +3,14 @@
 import { useEffect, useMemo, useState } from "react";
 import CurrentSidebar from "./parts/CurrentSidebar";
 import SummarizeView from "./parts/SummarizeView";
-import LLMView from "./parts/LLMView";
 import LLMFullView from "./LLMFullView";
 import FlashcardsView from "./parts/FlashcardsView";
-import PdfPane from "./parts/PdfPane"; 
+import PdfPane from "./parts/PdfPane";
+import LLMView from "./parts/LLMView";
 import { BASE } from "../../../lib/api";
 import { getSession } from "../../../lib/session";
+import { motion, AnimatePresence } from "framer-motion";
+import { Loader2, AlertCircle } from "lucide-react";
 
 export type SectionKey = "summarize" | "ai" | "flashcards";
 
@@ -29,7 +31,8 @@ export default function NoteDetailClient({ slug }: { slug: string }) {
   const [doc, setDoc] = useState<DocRow | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
-
+  
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [section, setSection] = useState<SectionKey>("summarize");
 
   useEffect(() => {
@@ -42,13 +45,7 @@ export default function NoteDetailClient({ slug }: { slug: string }) {
 
   useEffect(() => {
     const map = (h: string): SectionKey | null =>
-      h === "#ai"
-        ? "ai"
-        : h === "#flashcards"
-        ? "flashcards"
-        : h === "#summarize"
-        ? "summarize"
-        : null;
+      h === "#ai" ? "ai" : h === "#flashcards" ? "flashcards" : h === "#summarize" ? "summarize" : null;
 
     const init = map(window.location.hash);
     if (init) setSection(init);
@@ -82,64 +79,119 @@ export default function NoteDetailClient({ slug }: { slug: string }) {
         if (!stop) setLoading(false);
       }
     })();
-    return () => {
-      stop = true;
-    };
+    return () => { stop = true; };
   }, [fetchUrl]);
 
   return (
-    <div className="min-h-screen bg-[#FFFAF6]">
-      <CurrentSidebar active={section} userName={userName} onChange={setAndHash} />
+    <div className="min-h-screen bg-[#FDFBF7] text-neutral-900 font-sans selection:bg-orange-100 selection:text-orange-900 overflow-x-hidden">
+      
+      <CurrentSidebar 
+        active={section} 
+        userName={userName} 
+        onChange={setAndHash}
+        expanded={sidebarOpen}
+        setExpanded={setSidebarOpen}
+      />
 
-      <div
-        className="w-full py-6 px-4 sm:px-6 lg:px-8"
-        style={{ paddingLeft: "calc(var(--sbw, 56px) + 16px)" }}
+      <main 
+        className={`
+          min-h-screen transition-[padding] duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1.0)]
+          /* FIX: Remove padding left on mobile since sidebar is overlay */
+          md:pl-[88px] ${sidebarOpen ? "lg:pl-[280px]" : ""} 
+          pl-0 pt-16 md:pt-0
+        `}
       >
-        <div className="mx-auto w-full max-w-[1440px]">
-          <div className="mb-4">
-            <div className="font-krona text-[22px] md:text-[24px] text-black leading-tight">
+        <div className="mx-auto w-full max-w-[1600px] p-4 md:p-6 lg:p-8">
+          
+          <div className="mb-6 flex flex-col gap-1">
+            <motion.h1 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="font-krona text-xl md:text-2xl lg:text-3xl text-neutral-900 leading-tight break-words"
+            >
               {title}
-            </div>
-            <div className="font-inter text-[12px] text-neutral-600">Review notes and ask the AI</div>
+            </motion.h1>
           </div>
 
-          {loading && <div className="text-sm text-neutral-600">Loading document…</div>}
+          {loading && (
+            <div className="flex h-64 w-full flex-col items-center justify-center gap-3 text-neutral-400">
+              <Loader2 className="animate-spin text-orange-500" size={32} />
+              <p>Loading your study material...</p>
+            </div>
+          )}
+          
           {err && (
-            <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{err}</div>
+            <div className="flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+              <AlertCircle size={20} />
+              {err}
+            </div>
           )}
 
           {!loading && !err && doc && (
-            <>
+            <AnimatePresence mode="wait">
               {section === "summarize" && (
-                <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
-                  <SummarizeView
-                    summary={doc.summary ?? ""}
-                    images={(doc.image_urls ?? []).map((url, index) => ({
-                      url,
-                      page: index + 1,
-                      label: `Gambar halaman ${index + 1}`,
-                    }))}
-                  />
+                <motion.div
+                  key="summarize"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex flex-col gap-6"
+                >
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-auto lg:h-[65vh] lg:min-h-[500px]">
+                    
+                    <div className="h-[500px] lg:h-full lg:min-h-0">
+                      <SummarizeView
+                        summary={doc.summary ?? ""}
+                        images={(doc.image_urls ?? []).map((url, index) => ({
+                          url,
+                          page: index + 1,
+                          label: `Figure ${index + 1}`,
+                        }))}
+                      />
+                    </div>
 
-                  <PdfPane url={doc.url} title={doc.title} />
-
-                  <div className="xl:col-span-2">
-                    <LLMView height="compact" />
+                    <div className="h-[500px] lg:h-full lg:min-h-0">
+                      <PdfPane url={doc.url} title={doc.title} />
+                    </div>
                   </div>
-                </div>
+
+                  <div className="w-full h-[600px] lg:h-[500px]">
+                    <LLMView height="full" />
+                  </div>
+                </motion.div>
               )}
 
-              {section === "ai" && <LLMFullView />}
+              {section === "ai" && (
+                <motion.div
+                  key="ai"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.2 }}
+                  className="h-[calc(100dvh-140px)]"
+                >
+                  <LLMFullView />
+                </motion.div>
+              )}
 
               {section === "flashcards" && (
-                <FlashcardsView
-                  cards={(doc.flashcards ?? []).map((c, i) => ({ id: String(i + 1), ...c }))}
-                />
+                <motion.div
+                  key="flashcards"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <FlashcardsView
+                    cards={(doc.flashcards ?? []).map((c, i) => ({ id: String(i + 1), ...c }))}
+                  />
+                </motion.div>
               )}
-            </>
+            </AnimatePresence>
           )}
         </div>
-      </div>
+      </main>
     </div>
   );
 }
