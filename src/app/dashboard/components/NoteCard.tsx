@@ -24,7 +24,7 @@ export default function NoteCard({
   onDelete,
   onRename,
 }: Props) {
-  const builtHref = href || (slug ? `/dashboard/${encodeURIComponent(slug)}` : "#");
+  const builtHref = href || (slug ? `/LearnWai/dashboard/${encodeURIComponent(slug)}` : "#");
 
   const [showRename, setShowRename] = useState(false);
   const [showDelete, setShowDelete] = useState(false);

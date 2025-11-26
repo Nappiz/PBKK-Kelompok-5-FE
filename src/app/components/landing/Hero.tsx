@@ -52,14 +52,14 @@ export default function Hero() {
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <Link 
-            href="/register" 
+            href="/LearnWai/register" 
             className="group relative px-8 py-4 bg-neutral-900 text-white rounded-full font-bold text-lg shadow-xl shadow-orange-900/5 hover:shadow-2xl hover:scale-105 hover:-translate-y-1 transition-all flex items-center gap-2"
           >
             Start Learning Free
             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform text-orange-400" />
           </Link>
           <Link 
-            href="#features" 
+            href="/LearnWai/#features" 
             className="px-8 py-4 bg-white text-neutral-700 border border-neutral-200 rounded-full font-semibold text-lg hover:bg-neutral-50 hover:border-neutral-300 transition-all"
           >
             Explore Features

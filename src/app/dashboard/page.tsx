@@ -65,7 +65,7 @@ export default function DashboardPage() {
         id: String(r.id ?? ""),
         title: String(r.title ?? r.name ?? "Untitled"),
         slug: r.slug ? String(r.slug) : undefined,
-        url: typeof r.id === "string" ? `/dashboard/${r.id}` : `/dashboard/${encodeURIComponent(String(r.title ?? "untitled").toLowerCase().replace(/\s+/g, "-"))}`,
+        url: typeof r.id === "string" ? `/LearnWai/dashboard/${r.id}` : `/LearnWai/dashboard/${encodeURIComponent(String(r.title ?? "untitled").toLowerCase().replace(/\s+/g, "-"))}`,
         created_at: r.created_at,
       }));
       setDocs(mapped);

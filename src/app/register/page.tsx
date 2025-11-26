@@ -30,7 +30,7 @@ export default function RegisterPage() {
       if (res?.user?.id) {
         setSession({ id: res.user.id, name: res.user.name, email: res.user.email });
       }
-      window.location.href = "/dashboard";
+      window.location.href = "/LearnWai/dashboard";
     } catch (e: any) {
       setErr(e.message || "Registration failed");
     } finally {
@@ -82,7 +82,7 @@ export default function RegisterPage() {
         </button>
 
         <div className="mt-3 text-center">
-          <a href="/login" className="font-inter text-sm text-neutral-700 underline">
+          <a href="/LearnWai/login" className="font-inter text-sm text-neutral-700 underline">
             Already have an account? Sign in
           </a>
         </div>

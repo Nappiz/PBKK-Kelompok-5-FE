@@ -10,7 +10,7 @@ export default function Footer() {
           <div className="md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
                 <div className="h-10 w-10 rounded-xl bg-white border border-orange-100 p-1.5 shadow-sm">
-                    <img src="/images/Logo.png" alt="Logo" className="w-full h-full object-contain" />
+                    <img src="/LearnWai/images/Logo.png" alt="Logo" className="w-full h-full object-contain" />
                 </div>
                 <span className="font-krona text-xl text-neutral-900">LearnWAI</span>
             </div>
@@ -22,17 +22,17 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-neutral-900 mb-4 font-krona text-sm tracking-wide">Product</h4>
             <ul className="space-y-3 text-sm text-neutral-500">
-                <li><Link href="#features" className="hover:text-orange-600 transition-colors">Features</Link></li>
-                <li><Link href="/register" className="hover:text-orange-600 transition-colors">Get Started</Link></li>
-                <li><Link href="/login" className="hover:text-orange-600 transition-colors">Login</Link></li>
+                <li><Link href="/LearnWai/#features" className="hover:text-orange-600 transition-colors">Features</Link></li>
+                <li><Link href="/LearnWai/register" className="hover:text-orange-600 transition-colors">Get Started</Link></li>
+                <li><Link href="/LearnWai/login" className="hover:text-orange-600 transition-colors">Login</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-bold text-neutral-900 mb-4 font-krona text-sm tracking-wide">Legal</h4>
             <ul className="space-y-3 text-sm text-neutral-500">
-                <li><a href="#" className="hover:text-orange-600 transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-orange-600 transition-colors">Terms of Service</a></li>
+                <li><a href="/LearnWai/#" className="hover:text-orange-600 transition-colors">Privacy Policy</a></li>
+                <li><a href="/LearnWai/#" className="hover:text-orange-600 transition-colors">Terms of Service</a></li>
             </ul>
           </div>
         </div>

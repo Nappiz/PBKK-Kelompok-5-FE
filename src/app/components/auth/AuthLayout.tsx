@@ -20,7 +20,7 @@ export default function AuthLayout({ title, subtitle, children }: Props) {
         <div className="mx-auto w-full max-w-md">
           <div className="rounded-3xl bg-white/70 p-7 shadow-[0_10px_30px_rgba(0,0,0,0.06)] ring-1 ring-black/10 backdrop-blur-xl">
             <div className="mb-6 flex items-center gap-3">
-              <img src="/images/Logo.png" alt="" className="h-8 w-8" />
+              <img src="/LearnWai/images/Logo.png" alt="" className="h-8 w-8" />
               <span className="font-krona text-xl text-black">LearnWAI</span>
             </div>
             <h1 className="font-krona text-3xl text-black">{title}</h1>
@@ -41,7 +41,7 @@ export default function AuthLayout({ title, subtitle, children }: Props) {
             <div className="absolute -left-6 -top-6 h-24 w-24 rounded-3xl bg-white/40 blur-xl" />
             <div className="absolute -right-6 -bottom-8 h-28 w-28 rounded-full bg-[#FFD270]/40 blur-2xl" />
             <div className="relative rounded-3xl border border-white/50 bg-white/40 p-10 text-center backdrop-blur-xl">
-              <img src="/images/Mascot.png" alt="" className="mx-auto mb-6 h-20 w-20" />
+              <img src="/LearnWai/images/Mascot.png" alt="" className="mx-auto mb-6 h-20 w-20" />
               <div className="font-krona text-4xl text-black">Study smarter.</div>
               <p className="mt-3 font-inter text-neutral-700">
                 Upload PDFs, get clean summaries, and practice with quizzes.

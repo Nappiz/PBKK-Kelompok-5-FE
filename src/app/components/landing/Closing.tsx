@@ -16,7 +16,7 @@ export default function Closing() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-            <img src="/images/Mascot.png" alt="Mascot" className="w-24 h-24 mx-auto mb-8 animate-bounce-slow" />
+            <img src="/LearnWai/images/Mascot.png" alt="Mascot" className="w-24 h-24 mx-auto mb-8 animate-bounce-slow" />
             
             <h2 className="font-krona text-4xl md:text-6xl text-neutral-900 mb-6 leading-tight">
               Ready to upgrade your learning?
@@ -26,7 +26,7 @@ export default function Closing() {
             </p>
             
             <Link 
-              href="/register" 
+              href="/LearnWai/register" 
               className="inline-block px-10 py-4 rounded-full bg-neutral-900 text-white font-bold text-lg shadow-xl shadow-orange-900/10 hover:shadow-2xl hover:scale-105 hover:-translate-y-1 transition-all"
             >
               Get Started for Free

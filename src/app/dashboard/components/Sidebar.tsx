@@ -46,7 +46,7 @@ export default function Sidebar({ userName, expanded, setExpanded }: SidebarProp
 
   function onLogout() {
     clearSession();
-    window.location.href = "/";
+    window.location.href = "/LearnWai/";
   }
 
   const sidebarVariants: Variants = {
@@ -113,7 +113,7 @@ export default function Sidebar({ userName, expanded, setExpanded }: SidebarProp
           {(expanded || isMobile) && (
             <div className="flex items-center gap-3 overflow-hidden">
               <img 
-                src="/images/Logo.png" 
+                src="/LearnWai/images/Logo.png" 
                 alt="Logo" 
                 className="h-8 w-8 object-contain drop-shadow-sm" 
               />
@@ -147,7 +147,7 @@ export default function Sidebar({ userName, expanded, setExpanded }: SidebarProp
           <SidebarItem 
             icon={<Home size={22} />} 
             label="Dashboard" 
-            href="/dashboard" 
+            href="/LearnWai/dashboard" 
             active 
             expanded={expanded || isMobile} 
           />

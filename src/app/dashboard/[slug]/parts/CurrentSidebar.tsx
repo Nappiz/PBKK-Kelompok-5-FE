@@ -51,7 +51,7 @@ export default function CurrentSidebar({ active = "summarize", onChange, userNam
 
   function onLogout() {
     clearSession();
-    window.location.href = "/";
+    window.location.href = "/LearnWai/";
   }
 
   const sidebarVariants: Variants = {
@@ -116,7 +116,7 @@ export default function CurrentSidebar({ active = "summarize", onChange, userNam
         <div className="flex items-center justify-between h-20 px-5 mb-2 transition-all duration-300 min-w-[280px] md:min-w-0">
           {(expanded || isMobile) && (
             <div className="flex items-center gap-3 overflow-hidden">
-              <img src="/images/Logo.png" alt="Logo" className="h-8 w-8 object-contain drop-shadow-sm" />
+              <img src="/LearnWai/images/Logo.png" alt="Logo" className="h-8 w-8 object-contain drop-shadow-sm" />
               <motion.span
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -147,7 +147,7 @@ export default function CurrentSidebar({ active = "summarize", onChange, userNam
           <SidebarItem 
             icon={<ArrowLeft size={22} />} 
             label="Back to Dashboard" 
-            href="/dashboard" 
+            href="/LearnWai/dashboard" 
             expanded={expanded || isMobile} 
           />
           
