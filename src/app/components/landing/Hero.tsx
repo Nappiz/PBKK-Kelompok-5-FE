@@ -1,55 +1,79 @@
 "use client";
 
-import Button from "../ui/Button";
-import UploadCard from "./UploadCard";
-import DecorLayer from "./DecorLayer";
-import GlowOrbs from "./GlowOrbs";
-import Reveal from "./Reveal";
+import { motion } from "framer-motion";
+import { ArrowRight, Sparkles } from "lucide-react";
+import Link from "next/link";
 
 export default function Hero() {
-  const onCta = () => document.querySelector("#features")?.scrollIntoView({ behavior:"smooth", block:"start" });
-
   return (
-    <section aria-label="Hero" className="relative min-h-[100svh] overflow-hidden pt-20">
-      <div className="noise absolute inset-0" aria-hidden />
-      <GlowOrbs />
+    <section className="relative min-h-[90vh] flex flex-col justify-center overflow-hidden pt-32 pb-20">      
+      <div className="absolute inset-0 bg-[#FDFBF7] -z-20" />
+      <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-orange-200/20 rounded-full blur-[100px] -z-10" />
+      <div className="absolute bottom-[-10%] right-0 w-[600px] h-[400px] bg-yellow-200/20 rounded-full blur-[100px] -z-10" />
+      <div className="container mx-auto px-4 text-center relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-orange-100 shadow-sm text-orange-700 text-xs font-bold uppercase tracking-widest mb-8"
+        >
+          <Sparkles size={14} className="fill-orange-500 text-orange-500" />
+          <span>Your AI Study Buddy</span>
+        </motion.div>
 
-      <div className="relative z-10 mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-4 pt-24 pb-40 md:grid-cols-2 md:gap-12">
-        <Reveal>
-          <div className="space-y-8">
-            <h1 className="font-krona text-[52px] md:text-[60px] leading-[1.06] text-black drop-shadow-[0_1px_0_rgba(0,0,0,.04)]">
-              Meet LearnWAI
-            </h1>
-            <p className="font-inter text-[34px] md:text-[40px] leading-tight text-neutral-800">
-              Your AI Study Buddy for Everyday Learning.
-            </p>
+        <motion.h1 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.6 }}
+          className="font-krona text-5xl md:text-7xl lg:text-[80px] text-neutral-900 leading-[1.1] mb-8 tracking-tight"
+        >
+          Learn faster with <br className="hidden md:block" />
+          <span className="relative inline-block">
+            <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-yellow-500">LearnWAI</span>
+            <svg className="absolute w-full h-3 -bottom-1 left-0 text-orange-200 z-0" viewBox="0 0 100 10" preserveAspectRatio="none">
+                <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
+            </svg>
+          </span>
+        </motion.h1>
 
-            <div className="flex flex-wrap items-center gap-3">
-              <Button
-                onClick={onCta}
-                className="btn-shine cursor-pointer font-inter font-semibold text-[18px] text-black
-                           bg-gradient-to-r from-[#FFB468] to-[#FFD270] px-6 py-3 rounded-xl shadow-sm
-                           hover:shadow-md active:translate-y-px focus:outline-none focus:ring-2 focus:ring-black/10"
-              >
-                Get Started
-              </Button>
-              <a href="#features"
-                 className="font-inter rounded-xl border border-black/10 bg-white/70 px-5 py-3 text-[14px] text-neutral-800 backdrop-blur
-                            hover:bg-white transition">
-                See Features
-              </a>
-            </div>
-          </div>
-        </Reveal>
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.6 }}
+          className="font-inter text-lg md:text-xl text-neutral-500 max-w-2xl mx-auto mb-12 leading-relaxed"
+        >
+          Stop drowning in PDFs. Upload your materials and let LearnWAI generate summaries, flashcards, and quizzes instantly.
+        </motion.p>
 
-        <Reveal className="delay-100">
-          <div className="flex justify-center md:justify-end">
-            <UploadCard />
-          </div>
-        </Reveal>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4"
+        >
+          <Link 
+            href="/register" 
+            className="group relative px-8 py-4 bg-neutral-900 text-white rounded-full font-bold text-lg shadow-xl shadow-orange-900/5 hover:shadow-2xl hover:scale-105 hover:-translate-y-1 transition-all flex items-center gap-2"
+          >
+            Start Learning Free
+            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform text-orange-400" />
+          </Link>
+          <Link 
+            href="#features" 
+            className="px-8 py-4 bg-white text-neutral-700 border border-neutral-200 rounded-full font-semibold text-lg hover:bg-neutral-50 hover:border-neutral-300 transition-all"
+          >
+            Explore Features
+          </Link>
+        </motion.div>
+
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6, duration: 1 }}
+            className="mt-20 pt-10 border-t border-neutral-200/60 max-w-4xl mx-auto"
+        >
+        </motion.div>
       </div>
-
-      <DecorLayer />
     </section>
   );
 }

@@ -1,48 +1,38 @@
 "use client";
 
-import DecorLayer2 from "./DecorLayer2";
-import Reveal from "./Reveal";
+import Link from "next/link";
+import { motion } from "framer-motion";
 
 export default function Closing() {
   return (
-    <section className="relative overflow-hidden min-h-[100svh] bg-[#FFFAF6]">
-      {/* top separator */}
-      <img
-        src="/images/SeperatorUpsideDown.png"
-        alt=""
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-0 z-20 -translate-x-1/2 h-[160px] w-full max-w-[1920px] object-cover select-none"
-      />
-
-      {/* background */}
-      <img
-        src="/images/CloseBG.png"
-        alt=""
-        aria-hidden
-        className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover select-none"
-      />
-
-      {/* perfectly centered content */}
-      <div className="relative z-10 mx-auto grid min-h-[100svh] w-full max-w-5xl place-items-center px-6">
-        <Reveal>
-          <div className="text-center">
-            <img
-              src="/images/Mascot.png"
-              alt=""
-              className="mx-auto mb-6 h-16 w-16 md:h-20 md:w-20 select-none animate-float-slow"
-              draggable={false}
-            />
-            <h2 className="font-krona text-[42px] md:text-[56px] leading-tight text-black">
-              LearnWAI
+    <section className="relative py-32 px-4 overflow-hidden">
+      <div className="absolute inset-0 bg-[#FDFBF7] -z-20" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-gradient-to-r from-orange-200/20 to-yellow-200/20 rounded-full blur-[120px] -z-10" />      
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-200/50 to-transparent" />      
+      <div className="container mx-auto max-w-4xl text-center relative z-10">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+            <img src="/images/Mascot.png" alt="Mascot" className="w-24 h-24 mx-auto mb-8 animate-bounce-slow" />
+            
+            <h2 className="font-krona text-4xl md:text-6xl text-neutral-900 mb-6 leading-tight">
+              Ready to upgrade your learning?
             </h2>
-            <p className="mt-4 font-inter text-[20px] md:text-[26px] text-neutral-800">
-              Your AI Study Buddy for Everyday Learning.
+            <p className="text-xl text-neutral-600 mb-12 max-w-2xl mx-auto leading-relaxed">
+              Join thousands of students who are saving hours of study time every week with LearnWAI.
             </p>
-          </div>
-        </Reveal>
+            
+            <Link 
+              href="/register" 
+              className="inline-block px-10 py-4 rounded-full bg-neutral-900 text-white font-bold text-lg shadow-xl shadow-orange-900/10 hover:shadow-2xl hover:scale-105 hover:-translate-y-1 transition-all"
+            >
+              Get Started for Free
+            </Link>
+        </motion.div>
       </div>
-
-      <DecorLayer2 />
     </section>
   );
 }

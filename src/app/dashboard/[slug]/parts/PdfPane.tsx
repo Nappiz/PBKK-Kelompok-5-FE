@@ -1,34 +1,46 @@
-// /app/dashboard/[slug]/parts/PdfPane.tsx
 "use client";
+
+import { FileText, ExternalLink } from "lucide-react";
 
 export default function PdfPane({ url, title }: { url?: string; title?: string }) {
   const safe = typeof url === "string" && url.length > 0;
 
   return (
-    <section
-      className="
-        relative rounded-xl bg-white shadow-sm ring-1 ring-black/10 overflow-hidden
-        min-h-[560px] h-[calc(100svh-160px)]
-      "
-    >
-      {/* header */}
-      <div className="sticky top-0 z-10 flex items-center gap-2 border-b border-[#FFBD71]/60 bg-gradient-to-r from-[#FFE970] to-[#FF8B0C] px-3 py-2 text-[16px] font-semibold text-black">
-        <img src="/images/pdf2.png" alt="" className="h-5 w-5 mx-1" />
-        Original PDF
-        {title ? <span className="ml-2 truncate text-xs text-black/70">— {title}</span> : null}
+    <section className="relative rounded-3xl bg-neutral-900 shadow-lg ring-1 ring-black/5 overflow-hidden flex flex-col h-full">
+      <div className="flex items-center justify-between px-4 py-3 bg-neutral-800 border-b border-neutral-700">
+        <div className="flex items-center gap-3">
+          <div className="h-8 w-8 rounded-lg bg-white/10 flex items-center justify-center text-white">
+            <FileText size={16} />
+          </div>
+          <div className="min-w-0">
+             <div className="text-xs font-medium text-neutral-400 uppercase tracking-wider">Original Source</div>
+             <div className="text-sm text-white truncate max-w-[200px]">{title || "Document.pdf"}</div>
+          </div>
+        </div>
+        
+        {safe && (
+            <a 
+                href={url} 
+                target="_blank" 
+                rel="noreferrer"
+                className="p-2 text-neutral-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                title="Open in new tab"
+            >
+                <ExternalLink size={16} />
+            </a>
+        )}
       </div>
 
-      {/* body */}
-      <div className="h-[calc(100%-40px)]">
+      <div className="flex-1 bg-neutral-200">
         {safe ? (
           <iframe
-            src={`${url}#toolbar=1&navpanes=0&view=fitH`}
+            src={`${url}#toolbar=0&navpanes=0&view=FitH`}
             className="h-full w-full"
             title={title || "PDF"}
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-sm text-neutral-600 p-6">
-            PDF URL not available.
+          <div className="flex h-full w-full items-center justify-center text-sm text-neutral-500">
+            PDF source not available.
           </div>
         )}
       </div>

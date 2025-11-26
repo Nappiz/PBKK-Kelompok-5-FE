@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import { Edit3, Image as ImageIcon } from "lucide-react";
 
 type FigureImage = {
   url: string;
@@ -21,37 +22,25 @@ function normalizeSummaryMath(text: string): string {
   if (!text) return text;
   let t = text;
 
-  // 1) Ubah [ \text{...} ] => $ \text{...} $
   t = t.replace(/\[(\s*\\[^\[\]]+?)\]/g, (_m, inner) => {
     return `$${inner.trim()}$`;
   });
 
-  // 2) \(...\) => $...$
   t = t.replace(/\\\((.+?)\\\)/g, (_m, inner) => {
     return `$${inner.trim()}$`;
   });
 
-  // 3) \[ ... \] => $$...$$ (blok)
   t = t.replace(/\\\[((?:.|\n)+?)\\\]/g, (_m, inner) => {
     return `\n\n$$${inner.trim()}$$\n\n`;
   });
 
-  // 4) \$ => $ (unescape dollar yang kebanyakan)
   t = t.replace(/\\\$/g, "$");
 
-  // 5) Rapihin spasi di dalam $ ... $
   t = t.replace(/\$\s+([^$]*?)\s+\$/g, (_m, inner) => {
     return `$${inner.trim()}$`;
   });
 
   return t;
-}
-
-function normalizeMathBrackets(text: string): string {
-  if (!text) return text;
-  return text.replace(/\[(\s*\\[^|\[\]]+?)\]/g, (_m, inner) => {
-    return `$${inner.trim()}$`;
-  });
 }
 
 export default function SummarizeView({ summary, images = [] }: SummarizeViewProps) {
@@ -64,48 +53,37 @@ export default function SummarizeView({ summary, images = [] }: SummarizeViewPro
   );
 
   return (
-    <section className="relative rounded-xl bg-white shadow-sm ring-1 ring-black/10 overflow-hidden min-h-[560px] h-[calc(100svh-160px)] pb-7">
-      <div className="sticky top-0 z-10 flex items-center gap-2 border-b border-[#FFBD71]/60 bg-gradient-to-r from-[#FFE970] to-[#FF8B0C] px-3 py-2 text-[18px] font-semibold text-black">
-        <div className="my-2 flex items-center justify-center">
-          <span className="inline-flex h-5 w-5 items-center justify-center rounded-md mx-4">
-            <img src="/images/edit.png" alt="" className="h-5 w-5" />
-          </span>
-          AI summary notes
+    <section className="relative rounded-3xl bg-white shadow-sm border border-neutral-200/60 overflow-hidden flex flex-col h-full">
+      
+      <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-neutral-100 bg-white/90 backdrop-blur-md px-6 py-4">
+        <div className="h-8 w-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center">
+          <Edit3 size={16} />
+        </div>
+        <div>
+          <h2 className="text-sm font-bold text-neutral-900 font-krona">AI Summary</h2>
+          <p className="text-xs text-neutral-500">Auto-generated from PDF</p>
         </div>
       </div>
 
-      <div className="h-[calc(100%-40px)] overflow-y-auto px-5 py-4">
+      <div className="flex-1 overflow-y-auto px-6 py-6 custom-scrollbar scroll-smooth">
         <article className="prose prose-neutral max-w-none text-black">
-          <h2 className="font-krona !mt-0 text-[24px] text-black">
-            Summary
-          </h2>
-
           {!hasSummary ? (
-            <p className="leading-relaxed text-neutral-500">
-              No summary yet.
-            </p>
+            <div className="flex flex-col items-center justify-center py-10 text-neutral-400">
+              <p>No summary generated yet.</p>
+            </div>
           ) : (
             <ReactMarkdown
               remarkPlugins={[remarkMath, remarkGfm]}
               rehypePlugins={[rehypeKatex]}
               components={{
                 h1: ({ node, ...props }) => (
-                  <h3
-                    className="mt-4 mb-2 text-[20px] font-semibold text-black"
-                    {...props}
-                  />
+                  <h3 className="mt-4 mb-2 text-[20px] font-semibold text-black" {...props} />
                 ),
                 h2: ({ node, ...props }) => (
-                  <h3
-                    className="mt-4 mb-2 text-[20px] font-semibold text-black"
-                    {...props}
-                  />
+                  <h3 className="mt-4 mb-2 text-[20px] font-semibold text-black" {...props} />
                 ),
                 h3: ({ node, ...props }) => (
-                  <h3
-                    className="mt-4 mb-2 text-[18px] font-semibold text-black"
-                    {...props}
-                  />
+                  <h3 className="mt-4 mb-2 text-[18px] font-semibold text-black" {...props} />
                 ),
                 p: ({ node, ...props }) => (
                   <p className="mb-2 leading-relaxed" {...props} />
@@ -122,6 +100,12 @@ export default function SummarizeView({ summary, images = [] }: SummarizeViewPro
                 li: ({ node, ...props }) => (
                   <li className="mb-1" {...props} />
                 ),
+                blockquote: ({ node, ...props }) => (
+                  <blockquote className="border-l-4 border-orange-200 pl-4 italic text-neutral-600 my-4" {...props} />
+                ),
+                code: ({ node, ...props }) => (
+                  <code className="bg-neutral-100 rounded px-1 py-0.5 text-sm text-orange-600 font-mono" {...props} />
+                ),
               }}
             >
               {normalizedSummary}
@@ -129,24 +113,26 @@ export default function SummarizeView({ summary, images = [] }: SummarizeViewPro
           )}
 
           {hasImages && (
-            <section className="mt-6">
-              <h3 className="text-sm font-semibold text-neutral-700 mb-2">
-                Related figures & pages
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <section className="mt-10 pt-6 border-t border-neutral-100">
+              <div className="flex items-center gap-2 mb-4 text-neutral-900 font-semibold">
+                <ImageIcon size={18} className="text-orange-500" />
+                <h3>Figures & Diagrams</h3>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {images.map((img, idx) => (
                   <figure
                     key={img.url + idx}
-                    className="group overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50"
+                    className="group overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50/50 hover:shadow-md transition-all cursor-zoom-in"
                   >
-                    <div className="relative aspect-[3/4] overflow-hidden">
+                    <div className="relative aspect-[4/3] overflow-hidden bg-white p-2">
                       <img
                         src={img.url}
                         alt={img.label || `Page ${img.page ?? idx + 1}`}
-                        className="h-full w-full object-contain group-hover:scale-[1.02] transition-transform"
+                        className="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                        loading="lazy"
                       />
                     </div>
-                    <figcaption className="px-2 py-1 text-[11px] text-neutral-600">
+                    <figcaption className="px-3 py-2 text-[10px] uppercase tracking-wide font-medium text-neutral-500 border-t border-neutral-100 bg-white">
                       {img.label ? img.label : `Page ${img.page ?? idx + 1}`}
                     </figcaption>
                   </figure>
@@ -156,8 +142,6 @@ export default function SummarizeView({ summary, images = [] }: SummarizeViewPro
           )}
         </article>
       </div>
-
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-1 bg-[#FFBD71]/70" />
     </section>
   );
 }

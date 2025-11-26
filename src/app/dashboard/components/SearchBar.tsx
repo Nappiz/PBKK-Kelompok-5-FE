@@ -1,3 +1,5 @@
+import { Search } from "lucide-react";
+
 export default function SearchBar({
   value,
   onChange,
@@ -6,18 +8,28 @@ export default function SearchBar({
   onChange: (v: string) => void;
 }) {
   return (
-    <div className="overflow-hidden rounded-lg border bg-[#FFCF91]" style={{ borderColor: "#FFBD71" }}>
-      <div className="flex items-center px-3">
-        <svg width="16" height="16" viewBox="0 0 24 24" className="mr-2">
-          <circle cx="11" cy="11" r="7" stroke="#FFBD71" strokeWidth="2" fill="none" />
-          <path d="M20 20l-3-3" stroke="#FFBD71" strokeWidth="2" />
-        </svg>
-        <input
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder="Search..."
-          className="h-10 w-full bg-transparent text-sm outline-none placeholder:text-black/50"
-        />
+    <div className="relative group w-full">
+      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-neutral-400 group-focus-within:text-orange-500 transition-colors">
+        <Search size={18} />
+      </div>
+      <input
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="Search documents..."
+        className="
+          block w-full pl-10 pr-4 py-2.5 
+          bg-white border border-neutral-200 rounded-xl
+          text-sm text-neutral-900 placeholder:text-neutral-400
+          outline-none
+          shadow-sm
+          focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10
+          transition-all duration-200
+        "
+      />
+      <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+        <kbd className="hidden md:inline-flex items-center h-5 px-1.5 text-[10px] font-medium text-neutral-400 bg-neutral-50 border border-neutral-200 rounded font-sans">
+          /
+        </kbd>
       </div>
     </div>
   );
