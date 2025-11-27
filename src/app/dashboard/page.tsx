@@ -7,7 +7,7 @@ import SearchBar from "./components/SearchBar";
 import NoteCard from "./components/NoteCard";
 import { getSession } from "../../lib/session";
 import { motion, AnimatePresence } from "framer-motion"; 
-import { Search, Loader2 } from "lucide-react";
+import { Search, Loader2, AlertCircle, FileText, Sparkles, Check, Zap, BrainCircuit } from "lucide-react";
 
 import {
   apiListDocuments,
@@ -60,16 +60,22 @@ export default function DashboardPage() {
     try {
       setLoadingList(true);
       const res = await apiListDocuments(userId);
-      const rows = (res?.data ?? []) as any[];
+      const rows = (res?.data ?? []) as any[];      
       const mapped: Doc[] = rows.map((r) => ({
         id: String(r.id ?? ""),
         title: String(r.title ?? r.name ?? "Untitled"),
         slug: r.slug ? String(r.slug) : undefined,
-        url: typeof r.id === "string" ? `/dashboard/${r.id}` : `/dashboard/${encodeURIComponent(String(r.title ?? "untitled").toLowerCase().replace(/\s+/g, "-"))}`,
+        url: typeof r.id === "string" && r.id
+          ? `/dashboard/${r.id}`
+          : `/dashboard/${encodeURIComponent(String(r.title ?? "untitled").toLowerCase().replace(/\s+/g, "-"))}`,
         created_at: r.created_at,
       }));
       setDocs(mapped);
-    } catch (e) { console.error(e); } finally { setLoadingList(false); }
+    } catch (e) { 
+      console.error(e); 
+    } finally { 
+      setLoadingList(false); 
+    }
   }, [userId]);
 
   useEffect(() => { if (userId) fetchDocs(); }, [userId, fetchDocs]);
@@ -78,19 +84,31 @@ export default function DashboardPage() {
       if (!file) return;
       try {
         setModalOpen(true);
-        setStage("Uploading file…");
-        setProgress(5);
+        setStage("Uploading document...");
+        setProgress(0);
+        
+        const fakeProgress = setInterval(() => {
+            setProgress(old => (old < 10 ? old + 1 : old));
+        }, 200);
+
         const up = await apiUploadDocument(file, userId);
+        clearInterval(fakeProgress);
+        
         const jobId = up.job_id;
-        setStage("Indexing document…");
+        setStage("Indexing document...");
         setProgress(15);
+
         await new Promise<void>((resolve, reject) => {
           const tick = async () => {
-             // ... polling logic
              try {
               const st = await apiJobStatus(jobId);
-              setStage(`${st.stage}: ${st.message}`);
-              setProgress(Math.max(15, Math.min(99, st.progress)));
+              let msg = st.message || st.stage;
+              if(msg.includes("embedding")) msg = "Reading content...";
+              if(msg.includes("summary")) msg = "AI thinking...";
+              
+              setStage(msg);
+              setProgress(Math.max(15, Math.min(95, st.progress)));
+              
               if (st.stage === "done" && st.ok) { clearIntervalIfAny(); resolve(); }
               if (st.stage === "error" || st.ok === false) { clearIntervalIfAny(); reject(new Error(st.message)); }
              } catch (err) { clearIntervalIfAny(); reject(err); }
@@ -99,10 +117,23 @@ export default function DashboardPage() {
           tick();
           pollRef.current = setInterval(tick, 1000);
         });
+        
+        setStage("Crafting Summary...");
         await apiSummarize().catch(() => {});
+        
+        setStage("Building Flashcards...");
+        setProgress(98);
         await apiFlashcards().catch(() => {});
-        setStage("Done!"); setProgress(100); await fetchDocs();
-      } catch (e: any) { alert(e?.message || "Error"); } finally { setTimeout(() => setModalOpen(false), 800); }
+        
+        setStage("Complete!");
+        setProgress(100); 
+        await fetchDocs();
+      } catch (e: any) { 
+        setStage("Error occurred");
+        alert(e?.message || "Error"); 
+      } finally { 
+        setTimeout(() => setModalOpen(false), 1500); 
+      }
   }, [userId, fetchDocs]);
 
   const handleDelete = useCallback(async (docId: string) => {
@@ -201,18 +232,139 @@ export default function DashboardPage() {
 
       <AnimatePresence>
         {modalOpen && (
-          <motion.div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-             <motion.div className="w-full max-w-md bg-white rounded-3xl p-8 shadow-2xl">
-                <div className="flex flex-col items-center text-center">
-                    <div className="relative mb-6 h-20 w-20">
-                        <svg className="h-full w-full -rotate-90 text-neutral-100" viewBox="0 0 36 36">
-                            <path className="fill-none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" strokeWidth="3" stroke="currentColor"/>
-                            <motion.path className="fill-none text-orange-500" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" strokeWidth="3" strokeDasharray={`${progress}, 100`} stroke="currentColor"/>
-                        </svg>
-                        <div className="absolute inset-0 flex items-center justify-center font-krona">{Math.round(progress)}%</div>
+          <motion.div className="fixed inset-0 z-[100] flex items-center justify-center bg-white/60 backdrop-blur-md p-4">
+             
+             <motion.div 
+                initial={{ scale: 0.8, opacity: 0, y: 30 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.9, opacity: 0, y: -30 }}
+                className="w-full max-w-sm bg-white/80 backdrop-blur-2xl rounded-[32px] p-1 shadow-2xl shadow-orange-500/20 relative overflow-hidden border border-white/60"
+             >
+                <div className="rounded-[28px] p-8 relative overflow-hidden h-full">
+                    
+                    <div className="absolute top-[-50%] left-[-50%] w-full h-full bg-orange-300/40 blur-[80px] rounded-full pointer-events-none" />
+                    <div className="absolute bottom-[-50%] right-[-50%] w-full h-full bg-yellow-300/40 blur-[80px] rounded-full pointer-events-none" />
+
+                    <div className="flex flex-col items-center text-center relative z-10">
+                        
+                        <div className="relative w-32 h-32 mb-10 flex items-center justify-center">
+                            
+                            <motion.div 
+                                className="absolute inset-0 border-[3px] border-orange-400/40 rounded-full"
+                                style={{ borderTopColor: '#FF8B0C', borderRightColor: 'transparent' }}
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                            />
+                            <motion.div 
+                                className="absolute inset-2 border-[3px] border-yellow-400/30 rounded-full"
+                                style={{ borderBottomColor: '#FFD270', borderLeftColor: 'transparent' }}
+                                animate={{ rotate: -360 }}
+                                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                            />
+
+                            <AnimatePresence mode="wait">
+                                {progress === 100 ? (
+                                    <motion.div
+                                        key="success"
+                                        initial={{ scale: 0, rotate: -90 }}
+                                        animate={{ scale: 1, rotate: 0 }}
+                                        transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                                        className="w-16 h-16 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center shadow-lg shadow-green-500/30"
+                                    >
+                                        <Check className="text-white w-8 h-8 stroke-[3]" />
+                                    </motion.div>
+                                ) : (
+                                    <motion.div 
+                                        key="scanning"
+                                        initial={{ scale: 0.9, opacity: 0 }}
+                                        animate={{ scale: 1, opacity: 1 }}
+                                        exit={{ scale: 0.9, opacity: 0 }}
+                                        className="relative w-14 h-16 bg-orange-50/80 rounded-xl border border-orange-100 flex items-center justify-center shadow-sm overflow-hidden"
+                                    >
+                                        {progress > 70 ? (
+                                            <BrainCircuit className="text-orange-500 w-8 h-8 animate-pulse" />
+                                        ) : progress > 30 ? (
+                                            <Sparkles className="text-orange-400 w-8 h-8" />
+                                        ) : (
+                                            <FileText className="text-neutral-400 w-8 h-8" />
+                                        )}
+
+                                        {progress < 100 && (
+                                            <motion.div 
+                                                className="absolute left-[-10%] w-[120%] h-1.5 bg-gradient-to-r from-orange-400 via-yellow-300 to-orange-400 shadow-[0_0_10px_#FF8B0C]"
+                                                animate={{ top: ["-10%", "110%"] }}
+                                                transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                                            />
+                                        )}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+
+                            {progress < 100 && (
+                                <>
+                                    {[...Array(6)].map((_, i) => (
+                                        <motion.div
+                                            key={i}
+                                            className="absolute w-1.5 h-1.5 bg-orange-400 rounded-full shadow-sm"
+                                            initial={{ opacity: 0, y: 10, x: 0 }}
+                                            animate={{ 
+                                                opacity: [0, 1, 0], 
+                                                y: -40 - Math.random() * 30, 
+                                                x: (Math.random() - 0.5) * 50,
+                                                scale: [1, 0.5]
+                                            }}
+                                            transition={{ 
+                                                duration: 1.5, 
+                                                repeat: Infinity, 
+                                                delay: i * 0.2, 
+                                                ease: "easeOut" 
+                                            }}
+                                        />
+                                    ))}
+                                </>
+                            )}
+                        </div>
+
+                        <div className="space-y-2 w-full">
+                            <motion.div 
+                                key={stage}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="font-krona text-neutral-900 text-lg tracking-wide"
+                            >
+                                {progress === 100 ? "Ready to Learn!" : "Processing..."}
+                            </motion.div>
+
+                            <motion.p 
+                                className="text-xs font-mono text-neutral-500 uppercase tracking-[0.2em] font-semibold"
+                                animate={{ opacity: [0.7, 1, 0.7] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                            >
+                                {stage}
+                            </motion.p>
+                        </div>
+
+                        <div className="w-full bg-neutral-100 h-2 rounded-full mt-8 overflow-hidden relative border border-neutral-200">
+                            <motion.div 
+                                className="absolute left-0 top-0 h-full bg-gradient-to-r from-[#FFE970] to-[#FF8B0C]"
+                                initial={{ width: 0 }}
+                                animate={{ width: `${progress}%` }}
+                                transition={{ type: "spring", stiffness: 20 }}
+                            />
+                            <motion.div 
+                                className="absolute top-0 bottom-0 right-0 w-20 bg-white/60 blur-md"
+                                animate={{ x: ["-300px", "300px"] }}
+                                transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
+                            />
+                        </div>
+                        
+                        <div className="mt-3 w-full flex justify-between text-[10px] text-neutral-400 font-mono font-medium">
+                            <span>START</span>
+                            <span className="text-orange-500">{Math.round(progress)}%</span>
+                            <span>FINISH</span>
+                        </div>
+
                     </div>
-                    <h3 className="font-krona text-lg mb-2">Processing</h3>
-                    <p className="text-sm text-neutral-500">{stage}</p>
                 </div>
              </motion.div>
           </motion.div>
