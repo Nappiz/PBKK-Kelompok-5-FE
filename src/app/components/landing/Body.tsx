@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { BookOpen, MessageSquare, BrainCircuit, FileText } from "lucide-react";
+import { BookOpen, MessageSquare, BrainCircuit, FileText, PlayCircle } from "lucide-react";
 
 export default function Body() {
   const features = [
@@ -41,11 +41,14 @@ export default function Body() {
 
   return (
     <section id="features" className="relative py-24 overflow-hidden scroll-mt-28">
+      
       <div className="absolute inset-0 bg-[#FDFBF7] -z-20" />
       <div className="absolute top-[-10%] right-0 w-[600px] h-[400px] bg-yellow-200/20 rounded-full blur-[100px] -z-10" />
       <div className="absolute top-1/3 right-[-10%] w-[600px] h-[600px] bg-orange-100/30 rounded-full blur-[120px] -z-10" />
       <div className="absolute bottom-0 left-[-10%] w-[500px] h-[500px] bg-yellow-100/30 rounded-full blur-[100px] -z-10" />
+
       <div className="container mx-auto px-4 max-w-6xl relative z-10">
+        
         <div className="text-center mb-20">
           <h2 className="font-krona text-3xl md:text-4xl text-neutral-900 mb-4">
             Everything you need to ace it
@@ -55,7 +58,7 @@ export default function Body() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-32">
           {features.map((f, i) => (
             <motion.div
               key={i}
@@ -70,14 +73,42 @@ export default function Body() {
               </div>
               <h3 className="font-krona text-xl text-neutral-900 mb-3">{f.title}</h3>
               <p className="text-neutral-500 leading-relaxed">{f.desc}</p>
-              
               <div className={`absolute -right-10 -bottom-10 w-40 h-40 bg-gradient-to-br from-transparent to-${f.bg.replace('bg-', '')} rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
             </motion.div>
           ))}
         </div>
 
-        <div id="how-it-works" className="mt-40 scroll-mt-28">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-12">                
+        <div className="mb-32">
+           <div className="text-center mb-12">
+              <span className="inline-flex items-center gap-2 py-1 px-4 rounded-full bg-white border border-orange-100 text-orange-600 text-xs font-bold uppercase tracking-widest mb-4 shadow-sm">
+                  <PlayCircle size={14} /> See it in action
+              </span>
+              <h3 className="font-krona text-2xl md:text-4xl text-neutral-900">
+                 Watch the Demo
+              </h3>
+           </div>
+
+           <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="relative w-full max-w-4xl mx-auto aspect-video rounded-[32px] overflow-hidden shadow-2xl shadow-orange-900/10 border-[8px] border-white bg-neutral-100"
+           >
+              <iframe 
+                width="100%" 
+                height="100%" 
+                src="https://www.youtube.com/embed/oaiSBkRWEkU?rel=0&modestbranding=1" 
+                title="LearnWAI Demo"
+                frameBorder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowFullScreen
+                className="absolute inset-0 w-full h-full"
+              ></iframe>
+           </motion.div>
+        </div>
+
+        <div id="how-it-works" className="scroll-mt-28">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-12">
                 <div className="w-full md:w-1/3">
                     <h3 className="font-krona text-2xl text-neutral-900 mb-4">How it works</h3>
                     <p className="text-neutral-500 leading-relaxed">
@@ -91,8 +122,8 @@ export default function Body() {
                         { title: "2. Process", desc: "AI analyzes content" },
                         { title: "3. Master", desc: "Quiz & Flashcards" }
                     ].map((step, i) => (
-                        <div key={i} className="relative p-6 rounded-2xl bg-white/50 border border-orange-100/60 backdrop-blur-sm shadow-sm hover:bg-white transition-colors">
-                            <div className="text-4xl font-krona text-orange-100 absolute right-4 top-2 select-none pointer-events-none">0{i+1}</div>
+                        <div key={i} className="relative p-6 rounded-2xl bg-white/50 border border-orange-100/60 backdrop-blur-sm shadow-sm hover:bg-white transition-colors group">
+                            <div className="text-4xl font-krona text-orange-100 absolute right-4 top-2 select-none pointer-events-none group-hover:text-orange-200 transition-colors">0{i+1}</div>
                             <div className="relative z-10">
                                 <h4 className="font-bold text-neutral-900 mb-1">{step.title}</h4>
                                 <p className="text-sm text-neutral-500">{step.desc}</p>
@@ -100,9 +131,9 @@ export default function Body() {
                         </div>
                     ))}
                 </div>
-
             </div>
         </div>
+
       </div>
     </section>
   );
