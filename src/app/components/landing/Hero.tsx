@@ -1,12 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, ChevronDown } from "lucide-react";
 import Link from "next/link";
 
 export default function Hero() {
   return (
-    <section className="relative min-h-[90vh] flex flex-col justify-center overflow-hidden pt-32 pb-20">      
+    <section className="relative min-h-[95vh] flex flex-col justify-center overflow-hidden pt-32 pb-20">      
       <div className="absolute inset-0 bg-[#FDFBF7] -z-20" />
       <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-orange-200/20 rounded-full blur-[100px] -z-10" />
       <div className="absolute bottom-[-10%] right-0 w-[600px] h-[400px] bg-yellow-200/20 rounded-full blur-[100px] -z-10" />
@@ -65,15 +65,22 @@ export default function Hero() {
             Explore Features
           </Link>
         </motion.div>
-
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 1 }}
-            className="mt-20 pt-10 border-t border-neutral-200/60 max-w-4xl mx-auto"
-        >
-        </motion.div>
       </div>
+
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1, y: [0, 10, 0] }}
+        transition={{ delay: 1, duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer"
+      >
+         <Link href="#features" className="flex flex-col items-center text-neutral-400 hover:text-orange-500 transition-colors">
+            <span className="text-[10px] font-krona uppercase tracking-widest mb-1">How it works</span>
+            <div className="p-2 rounded-full border border-neutral-200 bg-white/50 backdrop-blur-sm shadow-sm">
+               <ChevronDown size={20} />
+            </div>
+         </Link>
+      </motion.div>
+
     </section>
   );
 }
