@@ -107,7 +107,6 @@ export default function Body() {
            </motion.div>
         </div>
 
-        {/* WORKFLOW STEPS */}
         <div id="how-it-works" className="scroll-mt-28">
             <div className="flex flex-col md:flex-row items-center justify-between gap-12">
                 <div className="w-full md:w-1/3">
